@@ -1,0 +1,6 @@
+server:
+  port: 9178
+nextapi:
+  client:
+    access-key: 123456
+    secret-key: 123456
