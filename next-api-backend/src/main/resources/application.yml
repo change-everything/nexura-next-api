@@ -90,3 +90,14 @@ cos:
     secretKey: xxx
     region: xxx
     bucket: xxx
+
+
+dubbo:
+  application:
+    name: next-api-backend
+  protocol:
+    name: dubbo
+    port: -1
+  registry:
+    id: nacos-registry
+    address: nacos://120.46.207.211:8848
