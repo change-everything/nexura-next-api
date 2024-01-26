@@ -11,9 +11,9 @@ import java.util.HashMap;
  */
 public class SignUtils {
 
-    public static String genSign(HashMap<String, String> map, String secretKey) {
+    public static String genSign(String body, String secretKey) {
         Digester digester = new Digester(DigestAlgorithm.SHA256);
-        String content = map.toString() + "." + secretKey;
+        String content = body + "." + secretKey;
         return digester.digestHex(content);
     }
 

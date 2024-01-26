@@ -1,5 +1,7 @@
 server:
   port: 9178
+  servlet:
+    context-path: /api
 nextapi:
   client:
     access-key: 123456

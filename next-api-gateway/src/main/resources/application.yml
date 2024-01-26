@@ -1,0 +1,12 @@
+server:
+  port: 80
+spring:
+  cloud:
+    gateway:
+      default-filters:
+        - AddResponseHeader=source, nexura
+      routes:
+        - id: api_route
+          uri: http://localhost:9178
+          predicates:
+            - Path=/api/**

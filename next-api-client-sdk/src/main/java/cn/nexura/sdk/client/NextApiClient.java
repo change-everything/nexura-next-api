@@ -26,10 +26,12 @@ public class NextApiClient {
 
     private String secretKey;
 
+    public static final String GATEWAY_URL = "http://127.0.0.1";
+
     public String getNameUsingGet(String name) {
         HashMap<String, Object> paramMap = new HashMap<>();
         paramMap.put("name", name);
-        String result = HttpUtil.get("http://localhost:9178/name/", paramMap);
+        String result = HttpUtil.get(GATEWAY_URL + "/api/name/", paramMap);
         System.out.println("result = " + result);
         return result;
     }
@@ -37,14 +39,14 @@ public class NextApiClient {
     public String getNameUsingPost(String name) {
         HashMap<String, Object> paramMap = new HashMap<>();
         paramMap.put("name", name);
-        String result = HttpUtil.post("http://localhost:9178/name/", paramMap);
+        String result = HttpUtil.post(GATEWAY_URL + "/api/name/", paramMap);
         System.out.println("result = " + result);
         return result;
     }
 
     public String getNameBody(User user) {
         String json = JSONUtil.toJsonStr(user);
-        String result = HttpRequest.post("http://localhost:9178/name/json/")
+        String result = HttpRequest.post(GATEWAY_URL + "/api/name/json/")
                 .body(json)
                 .addHeaders(getHeaderMap(json))
                 .execute()
@@ -59,7 +61,7 @@ public class NextApiClient {
         map.put("nonce", RandomUtil.randomNumbers(4));
         map.put("body", body);
         map.put("timestamp", String.valueOf(System.currentTimeMillis() / 1000));
-        map.put("sign", SignUtils.genSign(map, secretKey));
+        map.put("sign", SignUtils.genSign(map.toString(), secretKey));
         return map;
     }
 
