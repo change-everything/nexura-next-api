@@ -1,5 +1,8 @@
 package cn.nexura.nextapi.controller;
 
+import cn.nexura.common.model.entity.User;
+import cn.nexura.common.model.vo.LoginUserVO;
+import cn.nexura.common.model.vo.UserVO;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import cn.nexura.nextapi.annotation.AuthCheck;
 import cn.nexura.nextapi.common.BaseResponse;
@@ -16,9 +19,6 @@ import cn.nexura.nextapi.model.dto.user.UserQueryRequest;
 import cn.nexura.nextapi.model.dto.user.UserRegisterRequest;
 import cn.nexura.nextapi.model.dto.user.UserUpdateMyRequest;
 import cn.nexura.nextapi.model.dto.user.UserUpdateRequest;
-import cn.nexura.nextapi.model.entity.User;
-import cn.nexura.nextapi.model.vo.LoginUserVO;
-import cn.nexura.nextapi.model.vo.UserVO;
 import cn.nexura.nextapi.service.UserService;
 import java.util.List;
 import javax.annotation.Resource;

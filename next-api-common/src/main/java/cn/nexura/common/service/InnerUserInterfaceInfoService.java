@@ -1,16 +1,14 @@
-package cn.nexura.nextapi.service;
+package cn.nexura.common.service;
 
 import cn.nexura.common.model.entity.UserInterfaceInfo;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
- *
+ * 内部用户接口服务
  * @author peiYP
  */
-public interface UserInterfaceInfoService extends IService<UserInterfaceInfo> {
+public interface InnerUserInterfaceInfoService extends IService<UserInterfaceInfo> {
 
-
-    void validUserInterfaceInfo(UserInterfaceInfo userInterfaceInfo, boolean add);
 
     /**
      * 调用接口统计

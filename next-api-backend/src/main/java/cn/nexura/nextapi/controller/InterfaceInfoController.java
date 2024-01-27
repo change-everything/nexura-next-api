@@ -1,5 +1,7 @@
 package cn.nexura.nextapi.controller;
 
+import cn.nexura.common.model.entity.InterfaceInfo;
+import cn.nexura.common.model.entity.User;
 import cn.nexura.nextapi.annotation.AuthCheck;
 import cn.nexura.nextapi.common.*;
 import cn.nexura.nextapi.config.WxOpenConfig;
@@ -11,16 +13,13 @@ import cn.nexura.nextapi.model.dto.interfaceinfo.InterfaceInfoAddRequest;
 import cn.nexura.nextapi.model.dto.interfaceinfo.InterfaceInfoInvokeRequest;
 import cn.nexura.nextapi.model.dto.interfaceinfo.InterfaceInfoQueryRequest;
 import cn.nexura.nextapi.model.dto.interfaceinfo.InterfaceInfoUpdateRequest;
-import cn.nexura.nextapi.model.dto.user.*;
-import cn.nexura.nextapi.model.entity.InterfaceInfo;
-import cn.nexura.nextapi.model.entity.User;
 import cn.nexura.nextapi.model.enums.InterfaceStatusEnum;
-import cn.nexura.nextapi.model.vo.LoginUserVO;
-import cn.nexura.nextapi.model.vo.UserVO;
 import cn.nexura.nextapi.service.InterfaceInfoService;
 import cn.nexura.nextapi.service.UserService;
+import cn.nexura.sdk.client.NextApiClient;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.common.bean.WxOAuth2UserInfo;
 import me.chanjar.weixin.common.bean.oauth2.WxOAuth2AccessToken;
@@ -289,8 +288,10 @@ public class InterfaceInfoController {
         String accessKey = loginUser.getAccessKey();
         String secretKey = loginUser.getSecretKey();
         // TODO: 2024/1/25 调用接口
-
-
-        return ResultUtils.success("成功");
+        NextApiClient nextApiClient = new NextApiClient(accessKey, secretKey);
+        Gson gson = new Gson();
+        User user = gson.fromJson(userRequestParams, User.class);
+        String usernameByPost = nextApiClient.getNameBody(user);
+        return ResultUtils.success(usernameByPost);
     }
 }

@@ -1,7 +1,13 @@
 package cn.nexura.gateway;
 
+import cn.nexura.common.model.entity.InterfaceInfo;
+import cn.nexura.common.model.entity.User;
+import cn.nexura.common.service.InnerInterfaceInfoService;
+import cn.nexura.common.service.InnerUserInterfaceInfoService;
+import cn.nexura.common.service.InnerUserService;
 import cn.nexura.sdk.util.SignUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.dubbo.config.annotation.DubboReference;
 import org.reactivestreams.Publisher;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
@@ -33,6 +39,18 @@ import java.util.Objects;
 @Component
 public class CustomGlobalFilter implements GlobalFilter, Ordered {
 
+    @DubboReference
+    private InnerUserService userService;
+
+    @DubboReference
+    private InnerInterfaceInfoService interfaceInfoService;
+
+    @DubboReference
+    private InnerUserInterfaceInfoService userInterfaceInfoService;
+
+    public static final String BASE_URL = "http://127.0.0.1:9178";
+
+
     public static final List<String> IP_WHITE_LIST = Arrays.asList("127.0.0.1");
 
     public static final long FIVE_MINUTES = 60 * 5L;
@@ -50,6 +68,8 @@ public class CustomGlobalFilter implements GlobalFilter, Ordered {
             response.setStatusCode(HttpStatus.FORBIDDEN);
             return response.setComplete();
         }
+        String method = request.getMethodValue();
+        String path = BASE_URL + request.getPath().value();
 
         // 用户鉴权
         HttpHeaders headers = request.getHeaders();
@@ -59,8 +79,15 @@ public class CustomGlobalFilter implements GlobalFilter, Ordered {
         String sign = headers.getFirst("sign");
         String body = headers.getFirst("body");
 
-        // TODO: 2024/1/25 对比AK是否一致
-        if (!Objects.equals(accessKey, "")) {
+        // 对比AK是否一致
+        User invokeUser = null;
+        try {
+            invokeUser = userService.getInvokeUser(accessKey);
+        } catch (Exception e) {
+            log.error("getInvokeUser error", e);
+        }
+
+        if (invokeUser == null) {
             return handleNoAuth(response);
         }
 
@@ -74,15 +101,26 @@ public class CustomGlobalFilter implements GlobalFilter, Ordered {
             return handleNoAuth(response);
         }
 
-        // TODO: 2024/1/25 校验SK
-        String serverSign = SignUtils.genSign(body, "");
+        // 校验SK
+        String secretKey = invokeUser.getSecretKey();
+        String serverSign = SignUtils.genSign(body, secretKey);
         if (!Objects.equals(sign, serverSign)) {
             return handleNoAuth(response);
         }
 
-        // TODO: 2024/1/25 查询数据接口是否存在
+        // 查询数据接口是否存在
+        InterfaceInfo interfaceInfo = null;
+        try {
+            interfaceInfo = interfaceInfoService.getInterfaceInfo(path, method);
+        } catch (Exception e) {
+            log.error("getInterfaceInfo error", e);
+        }
 
-        return handleResponse(exchange, chain);
+        if (interfaceInfo == null) {
+            return handleNoAuth(response);
+        }
+
+        return handleResponse(exchange, chain, interfaceInfo.getId(), invokeUser.getId());
     }
 
     /**
@@ -92,7 +130,7 @@ public class CustomGlobalFilter implements GlobalFilter, Ordered {
      * @param chain
      * @return
      */
-    public Mono<Void> handleResponse(ServerWebExchange exchange, GatewayFilterChain chain) {
+    public Mono<Void> handleResponse(ServerWebExchange exchange, GatewayFilterChain chain, Long interfaceInfoId, Long userId) {
         try {
             ServerHttpResponse originalResponse = exchange.getResponse();
             // 缓存数据的工厂
@@ -113,6 +151,11 @@ public class CustomGlobalFilter implements GlobalFilter, Ordered {
                             return super.writeWith(
                                     fluxBody.map(dataBuffer -> {
                                         // 7. todo 调用成功，接口调用次数 + 1 invokeCount
+                                        try {
+                                            userInterfaceInfoService.invokeCount(interfaceInfoId, userId);
+                                        } catch (Exception e) {
+                                            log.error("invokeCount error", e);
+                                        }
                                         byte[] content = new byte[dataBuffer.readableByteCount()];
                                         dataBuffer.read(content);
                                         DataBufferUtils.release(dataBuffer);//释放掉内存

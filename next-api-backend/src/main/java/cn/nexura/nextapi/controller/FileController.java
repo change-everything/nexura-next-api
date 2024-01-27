@@ -1,6 +1,7 @@
 package cn.nexura.nextapi.controller;
 
 import cn.hutool.core.io.FileUtil;
+import cn.nexura.common.model.entity.User;
 import cn.nexura.nextapi.common.BaseResponse;
 import cn.nexura.nextapi.common.ErrorCode;
 import cn.nexura.nextapi.common.ResultUtils;
@@ -8,7 +9,6 @@ import cn.nexura.nextapi.constant.FileConstant;
 import cn.nexura.nextapi.exception.BusinessException;
 import cn.nexura.nextapi.manager.CosManager;
 import cn.nexura.nextapi.model.dto.file.UploadFileRequest;
-import cn.nexura.nextapi.model.entity.User;
 import cn.nexura.nextapi.model.enums.FileUploadBizEnum;
 import cn.nexura.nextapi.service.UserService;
 import java.io.File;

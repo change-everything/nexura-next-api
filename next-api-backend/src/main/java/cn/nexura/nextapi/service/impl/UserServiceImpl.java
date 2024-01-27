@@ -3,19 +3,23 @@ package cn.nexura.nextapi.service.impl;
 import static cn.nexura.nextapi.constant.UserConstant.USER_LOGIN_STATE;
 
 import cn.hutool.core.util.RandomUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.digest.DigestUtil;
+import cn.nexura.common.model.entity.User;
+import cn.nexura.common.model.vo.LoginUserVO;
+import cn.nexura.common.model.vo.UserVO;
+import cn.nexura.common.service.InnerUserService;
+import cn.nexura.nextapi.model.enums.UserRoleEnum;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import cn.nexura.nextapi.common.ErrorCode;
 import cn.nexura.nextapi.constant.CommonConstant;
 import cn.nexura.nextapi.exception.BusinessException;
 import cn.nexura.nextapi.mapper.UserMapper;
 import cn.nexura.nextapi.model.dto.user.UserQueryRequest;
-import cn.nexura.nextapi.model.entity.User;
-import cn.nexura.nextapi.model.enums.UserRoleEnum;
-import cn.nexura.nextapi.model.vo.LoginUserVO;
-import cn.nexura.nextapi.model.vo.UserVO;
 import cn.nexura.nextapi.service.UserService;
 import cn.nexura.nextapi.utils.SqlUtils;
 import java.util.ArrayList;
@@ -275,4 +279,5 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
                 sortField);
         return queryWrapper;
     }
+
 }

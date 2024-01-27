@@ -66,6 +66,7 @@ const TableList: React.FC = () => {
     const hide = message.loading('修改中');
     try {
       await updateInterfaceInfoUsingPost({
+        id: currentRow?.id,
         ...fields,
       });
       hide();
@@ -156,11 +157,6 @@ const TableList: React.FC = () => {
    * @zh-CN 国际化配置
    * */
   const columns: ProColumns<API.InterfaceInfo>[] = [
-    {
-      title: 'id',
-      dataIndex: 'id',
-      valueType: 'index',
-    },
     {
       title: '接口名称',
       dataIndex: 'name',

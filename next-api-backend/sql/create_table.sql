@@ -65,3 +65,19 @@ insert into next_api_db.`interface_info` (`name`, `description`, `url`, `request
 insert into next_api_db.`interface_info` (`name`, `description`, `url`, `request_header`, `response_header`, `status`, `method`, `user_id`) values ('赖智渊', '邓志泽', 'www.emerson-mann.co', '熊明哲', '贺哲瀚', 0, '田鹏', 381422);
 insert into next_api_db.`interface_info` (`name`, `description`, `url`, `request_header`, `response_header`, `status`, `method`, `user_id`) values ('许涛', '陆致远', 'www.vella-ankunding.name', '贾哲瀚', '莫昊焱', 0, '袁越彬', 4218096);
 insert into next_api_db.`interface_info` (`name`, `description`, `url`, `request_header`, `response_header`, `status`, `method`, `user_id`) values ('吕峻熙', '沈鹏飞', 'www.shari-reichel.org', '郭鸿煊', '覃烨霖', 0, '熊黎昕', 493);
+
+
+
+-- 用户调用接口关系表
+create table if not exists next_api_db.`user_interface_info`
+(
+    `id` bigint not null auto_increment comment '主键' primary key,
+    `user_id` bigint not null comment '调用用户 id',
+    `interface_info_id` bigint not null comment '接口 id',
+    `total_num` int default 0 not null comment '总调用次数',
+    `left_num` int default 0 not null comment '剩余调用次数',
+    `status` int default 0 not null comment '0-正常，1-禁用',
+    `create_time` datetime default CURRENT_TIMESTAMP not null comment '创建时间',
+    `update_time` datetime default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP comment '更新时间',
+    `is_delete` tinyint default 0 not null comment '是否删除(0-未删, 1-已删)'
+) comment '用户调用接口关系';

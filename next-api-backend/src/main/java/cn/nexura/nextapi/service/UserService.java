@@ -1,11 +1,12 @@
 package cn.nexura.nextapi.service;
 
+import cn.nexura.common.model.entity.User;
+import cn.nexura.common.model.vo.LoginUserVO;
+import cn.nexura.common.model.vo.UserVO;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.IService;
 import cn.nexura.nextapi.model.dto.user.UserQueryRequest;
-import cn.nexura.nextapi.model.entity.User;
-import cn.nexura.nextapi.model.vo.LoginUserVO;
-import cn.nexura.nextapi.model.vo.UserVO;
+
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import me.chanjar.weixin.common.bean.WxOAuth2UserInfo;

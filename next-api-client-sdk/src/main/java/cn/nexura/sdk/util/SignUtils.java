@@ -17,4 +17,12 @@ public class SignUtils {
         return digester.digestHex(content);
     }
 
+    public static void main(String[] args) {
+        String s = genSign("{\"userName\":\"nexura\"}", "123456789");
+        String s1 = genSign("{\"userName\":\"nexura\"}", "123456789");
+
+        System.out.println("s = " + s);
+        System.out.println("s1 = " + s1);
+    }
+
 }

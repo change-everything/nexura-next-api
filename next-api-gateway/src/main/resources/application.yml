@@ -7,7 +7,7 @@ spring:
         - AddResponseHeader=source, nexura
       routes:
         - id: api_route
-          uri: http://localhost:9178
+          uri: http://127.0.0.1:9178
           predicates:
             - Path=/api/**
 

@@ -6,7 +6,7 @@ import cn.hutool.crypto.digest.Digester;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONUtil;
-import cn.nexura.sdk.model.User;
+import cn.nexura.common.model.entity.User;
 import cn.nexura.sdk.util.SignUtils;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -61,7 +61,7 @@ public class NextApiClient {
         map.put("nonce", RandomUtil.randomNumbers(4));
         map.put("body", body);
         map.put("timestamp", String.valueOf(System.currentTimeMillis() / 1000));
-        map.put("sign", SignUtils.genSign(map.toString(), secretKey));
+        map.put("sign", SignUtils.genSign(body, secretKey));
         return map;
     }
 

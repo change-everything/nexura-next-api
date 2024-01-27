@@ -1,9 +1,9 @@
 package cn.nexura.nextapi.aop;
 
+import cn.nexura.common.model.entity.User;
 import cn.nexura.nextapi.annotation.AuthCheck;
 import cn.nexura.nextapi.common.ErrorCode;
 import cn.nexura.nextapi.exception.BusinessException;
-import cn.nexura.nextapi.model.entity.User;
 import cn.nexura.nextapi.model.enums.UserRoleEnum;
 import cn.nexura.nextapi.service.UserService;
 import javax.annotation.Resource;

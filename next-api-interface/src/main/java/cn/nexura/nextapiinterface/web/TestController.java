@@ -25,7 +25,7 @@ public class TestController {
 
     @PostMapping("/json")
     public String getNameBody(@RequestBody User user) {
-        return "User你的名字是：" + user.getName();
+        return "User你的名字是：" + user.getUserName();
     }
 
 }

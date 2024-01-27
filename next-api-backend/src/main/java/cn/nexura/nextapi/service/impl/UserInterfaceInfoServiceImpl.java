@@ -1,12 +1,11 @@
 package cn.nexura.nextapi.service.impl;
 
+import cn.nexura.common.model.entity.UserInterfaceInfo;
+import cn.nexura.common.service.InnerUserInterfaceInfoService;
 import cn.nexura.nextapi.common.ErrorCode;
 import cn.nexura.nextapi.exception.BusinessException;
 import cn.nexura.nextapi.mapper.InterfaceInfoMapper;
 import cn.nexura.nextapi.mapper.UserInterfaceInfoMapper;
-import cn.nexura.nextapi.model.entity.InterfaceInfo;
-import cn.nexura.nextapi.model.entity.UserInterfaceInfo;
-import cn.nexura.nextapi.service.InterfaceInfoService;
 import cn.nexura.nextapi.service.UserInterfaceInfoService;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -41,10 +40,10 @@ public class UserInterfaceInfoServiceImpl extends ServiceImpl<UserInterfaceInfoM
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
         UpdateWrapper<UserInterfaceInfo> updateWrapper = new UpdateWrapper<>();
-        updateWrapper.eq("interfaceInfoId", interfaceInfoId);
-        updateWrapper.eq("userId", userId);
+        updateWrapper.eq("interface_info_id", interfaceInfoId);
+        updateWrapper.eq("user_id", userId);
 //        updateWrapper.gt("leftNum", 0);
-        updateWrapper.setSql("leftNum = leftNum - 1, totalNum = totalNum + 1");
+        updateWrapper.setSql("left_num = left_num - 1, total_num = total_num + 1");
         return this.update(updateWrapper);
     }
 }

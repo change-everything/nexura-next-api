@@ -1,7 +1,7 @@
 package cn.nexura.nextapi.mapper;
 
+import cn.nexura.common.model.entity.User;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import cn.nexura.nextapi.model.entity.User;
 
 /**
  * 用户数据库操作

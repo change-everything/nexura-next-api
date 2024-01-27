@@ -1,6 +1,6 @@
 package cn.nexura.nextapi.mapper;
 
-import cn.nexura.nextapi.model.entity.InterfaceInfo;
+import cn.nexura.common.model.entity.InterfaceInfo;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**
