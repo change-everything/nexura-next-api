@@ -8,7 +8,6 @@ const Settings: ProLayoutProps & {
   pwa?: boolean;
   logo?: string;
 } = {
-  logo: './public/logo.svg',
   navTheme: 'light',
   colorPrimary: '#722ED1',
   layout: 'top',

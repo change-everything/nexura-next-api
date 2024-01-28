@@ -68,7 +68,7 @@ export async function listInterfaceInfoUsingGet(
   params: API.listInterfaceInfoUsingGETParams,
   options?: { [key: string]: any },
 ) {
-  return request<API.BaseResponseListInterfaceInfo_>('/api/interfaceInfo/list', {
+  return request<API.BaseResponseListInterfaceInfoVO_>('/api/interfaceInfo/list', {
     method: 'GET',
     params: {
       ...params,

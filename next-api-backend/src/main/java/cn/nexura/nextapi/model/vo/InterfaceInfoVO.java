@@ -17,4 +17,9 @@ public class InterfaceInfoVO extends InterfaceInfo {
      */
     private Integer totalNum;
 
+    /**
+     * 创建者名称
+     */
+    private String userName;
+
 }

@@ -14,6 +14,7 @@ import cn.nexura.nextapi.model.dto.interfaceinfo.InterfaceInfoInvokeRequest;
 import cn.nexura.nextapi.model.dto.interfaceinfo.InterfaceInfoQueryRequest;
 import cn.nexura.nextapi.model.dto.interfaceinfo.InterfaceInfoUpdateRequest;
 import cn.nexura.nextapi.model.enums.InterfaceStatusEnum;
+import cn.nexura.nextapi.model.vo.InterfaceInfoVO;
 import cn.nexura.nextapi.service.InterfaceInfoService;
 import cn.nexura.nextapi.service.UserService;
 import cn.nexura.sdk.client.NextApiClient;
@@ -153,13 +154,13 @@ public class InterfaceInfoController {
      */
     @AuthCheck(mustRole = "admin")
     @GetMapping("/list")
-    public BaseResponse<List<InterfaceInfo>> listInterfaceInfo(InterfaceInfoQueryRequest interfaceInfoQueryRequest) {
+    public BaseResponse<List<InterfaceInfoVO>> listInterfaceInfo(InterfaceInfoQueryRequest interfaceInfoQueryRequest) {
         InterfaceInfo interfaceInfoQuery = new InterfaceInfo();
         if (interfaceInfoQueryRequest != null) {
             BeanUtils.copyProperties(interfaceInfoQueryRequest, interfaceInfoQuery);
         }
         QueryWrapper<InterfaceInfo> queryWrapper = new QueryWrapper<>(interfaceInfoQuery);
-        List<InterfaceInfo> interfaceInfoList = interfaceInfoService.list(queryWrapper);
+        List<InterfaceInfoVO> interfaceInfoList = interfaceInfoService.listInterface(queryWrapper);
         return ResultUtils.success(interfaceInfoList);
     }
     /**

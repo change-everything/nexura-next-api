@@ -7,6 +7,7 @@ import defaultSettings from '../config/defaultSettings';
 import { errorConfig } from './requestErrorConfig';
 const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/user/login';
+import logo from "../public/logo.svg";
 
 /**
  * @see  https://umijs.org/zh-CN/plugins/plugin-initial-state
@@ -37,6 +38,7 @@ export async function getInitialState(): Promise<{
 // ProLayout 支持的api https://procomponents.ant.design/components/layout
 export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) => {
   return {
+    logo: logo,
     actionsRender: () => [<Question key="doc" />],
     avatarProps: {
       src: initialState?.currentUser?.userAvatar,
@@ -85,19 +87,19 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
       return (
         <>
           {children}
-          {isDev && (
-            <SettingDrawer
-              disableUrlParams
-              enableDarkTheme
-              settings={defaultSettings}
-              onSettingChange={(settings) => {
-                setInitialState((preInitialState) => ({
-                  ...preInitialState,
-                  settings,
-                }));
-              }}
-            />
-          )}
+          {/*{isDev && (*/}
+          {/*  <SettingDrawer*/}
+          {/*    disableUrlParams*/}
+          {/*    enableDarkTheme*/}
+          {/*    settings={defaultSettings}*/}
+          {/*    onSettingChange={(settings) => {*/}
+          {/*      setInitialState((preInitialState) => ({*/}
+          {/*        ...preInitialState,*/}
+          {/*        settings,*/}
+          {/*      }));*/}
+          {/*    }}*/}
+          {/*  />*/}
+          {/*)}*/}
         </>
       );
     },

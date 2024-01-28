@@ -156,11 +156,13 @@ const TableList: React.FC = () => {
    * @en-US International configuration
    * @zh-CN 国际化配置
    * */
-  const columns: ProColumns<API.InterfaceInfo>[] = [
+  const columns: ProColumns<API.InterfaceInfoVO>[] = [
     {
       title: '接口名称',
       dataIndex: 'name',
       valueType: 'text',
+      width: 100,
+      fixed: 'left',
       formItemProps: {
         rules: [
           {
@@ -173,6 +175,7 @@ const TableList: React.FC = () => {
       title: '描述',
       dataIndex: 'description',
       valueType: 'textarea',
+      width: 150,
       formItemProps: {
         rules: [
           {
@@ -184,7 +187,26 @@ const TableList: React.FC = () => {
     {
       title: '请求方法',
       dataIndex: 'method',
-      valueType: 'text',
+      valueType: 'select',
+      width: 75,
+      valueEnum: {
+        GET: {
+          text: 'GET',
+          status: 'GET',
+        },
+        POST: {
+          text: 'POST',
+          status: 'POST',
+        },
+        PUT: {
+          text: 'PUT',
+          status: 'PUT',
+        },
+        DELETE: {
+          text: 'DELETE',
+          status: 'DELETE',
+        },
+      },
       formItemProps: {
         rules: [
           {
@@ -197,6 +219,7 @@ const TableList: React.FC = () => {
       title: '接口地址',
       dataIndex: 'url',
       valueType: 'text',
+      width: 150,
       formItemProps: {
         rules: [
           {
@@ -209,18 +232,7 @@ const TableList: React.FC = () => {
       title: '请求头',
       dataIndex: 'requestHeader',
       valueType: 'jsonCode',
-      formItemProps: {
-        rules: [
-          {
-            required: true,
-          },
-        ],
-      },
-    },
-    {
-      title: '请求参数',
-      dataIndex: 'requestParams',
-      valueType: 'jsonCode',
+      width: 200,
       formItemProps: {
         rules: [
           {
@@ -233,6 +245,20 @@ const TableList: React.FC = () => {
       title: '响应头',
       dataIndex: 'responseHeader',
       valueType: 'jsonCode',
+      width: 200,
+      formItemProps: {
+        rules: [
+          {
+            required: true,
+          },
+        ],
+      },
+    },
+    {
+      title: '请求参数',
+      dataIndex: 'requestParams',
+      valueType: 'jsonCode',
+      width: 200,
       formItemProps: {
         rules: [
           {
@@ -245,6 +271,7 @@ const TableList: React.FC = () => {
       title: '状态',
       dataIndex: 'status',
       hideInForm: true,
+      width: 75,
       valueEnum: {
         0: {
           text: '关闭',
@@ -266,8 +293,9 @@ const TableList: React.FC = () => {
     },
     {
       title: '创建人',
-      dataIndex: 'userId',
+      dataIndex: 'userName',
       valueType: 'text',
+      width: 75,
       hideInForm: true,
     },
     {
@@ -275,24 +303,19 @@ const TableList: React.FC = () => {
       sorter: true,
       dataIndex: 'createTime',
       valueType: 'dateTime',
+      width: 100,
       hideInForm: true,
     },
     {
       title: '操作',
       dataIndex: 'option',
       valueType: 'option',
+      fixed: 'right',
+      width: 80,
       render: (_, record) => [
-        <a
-          key="update"
-          onClick={() => {
-            handleUpdateModalOpen(true);
-            setCurrentRow(record);
-          }}
-        >
-          修改
-        </a>,
         record.status === 0 ? (
           <a
+            style={{color: "green"}}
             key="online"
             onClick={() => {
               handleOnline(record);
@@ -305,6 +328,7 @@ const TableList: React.FC = () => {
         ),
         record.status === 1 ? (
           <a
+            style={{color: "orange"}}
             key="offline"
             onClick={() => {
               handleOffline(record);
@@ -316,6 +340,16 @@ const TableList: React.FC = () => {
           false
         ),
         <a
+          key="update"
+          onClick={() => {
+            handleUpdateModalOpen(true);
+            setCurrentRow(record);
+          }}
+        >
+          修改
+        </a>,
+        <a
+          style={{color: "red"}}
           key="remove"
           onClick={() => {
             handleRemove(record);
@@ -330,6 +364,7 @@ const TableList: React.FC = () => {
     <PageContainer>
       <ProTable<API.RuleListItem, API.PageParams>
         headerTitle={'查询表格'}
+        scroll={{ x: 2500 }}
         actionRef={actionRef}
         rowKey={(record: any, index: number) => `${record?.id ?? ''}${index.toString()}`}
         search={{

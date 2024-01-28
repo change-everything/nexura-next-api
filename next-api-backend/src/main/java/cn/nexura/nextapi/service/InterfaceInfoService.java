@@ -1,7 +1,11 @@
 package cn.nexura.nextapi.service;
 
 import cn.nexura.common.model.entity.InterfaceInfo;
+import cn.nexura.nextapi.model.vo.InterfaceInfoVO;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.IService;
+
+import java.util.List;
 
 /**
 * @author peiyp
@@ -14,4 +18,5 @@ public interface InterfaceInfoService extends IService<InterfaceInfo> {
     void validInterfaceInfo(InterfaceInfo interfaceInfo, boolean add);
 
 
+    List<InterfaceInfoVO> listInterface(QueryWrapper<InterfaceInfo> queryWrapper);
 }

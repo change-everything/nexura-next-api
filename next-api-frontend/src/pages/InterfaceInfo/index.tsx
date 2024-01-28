@@ -17,11 +17,16 @@ import {
   message,
 } from 'antd';
 import React, { useEffect, useState } from 'react';
+import moment from 'moment';
+import 'monaco-editor/min/vs/editor/editor.main.css';
+import CodeEditor from "@uiw/react-textarea-code-editor";
+
 
 const Index: React.FC = () => {
   const [data, setData] = useState<API.InterfaceInfo>();
   const [invokeRes, setInvokeRes] = useState<any>();
   const [invokeLoading, setInvokeLoading] = useState<boolean>(false);
+  const [userRequestParams, setUserRequestParams] = useState("");
   const params = useParams();
 
   const loadData = async () => {
@@ -34,6 +39,7 @@ const Index: React.FC = () => {
         id: params.id,
       });
       setData(res.data);
+      setUserRequestParams(res.data?.requestParams ?? '');
     } catch (e: any) {
       message.error('请求失败，' + e.message);
     }
@@ -52,7 +58,7 @@ const Index: React.FC = () => {
     try {
       const res = await invokeInterfaceUsingPost({
         id: params.id,
-        ...values,
+        userRequestParams: userRequestParams,
       });
       setInvokeRes(res.data);
     } catch (e: any) {
@@ -102,17 +108,18 @@ const Index: React.FC = () => {
     {
       key: '7',
       label: '创建时间',
-      children: `${data?.createTime}`,
+      children: moment(`${data?.createTime}`).format("YYYY-MM-DD HH:mm:ss"),
       span: 2,
     },
     {
       key: '8',
       label: '更新时间',
-      children: `${data?.updateTime}`,
+      children: moment(`${data?.updateTime}`).format("YYYY-MM-DD HH:mm:ss"),
       span: 2,
     },
   ];
 
+  console.log("请求参数====>", JSON.stringify(userRequestParams))
   return (
     <PageContainer title="查看接口文档">
       <Card>
@@ -122,7 +129,17 @@ const Index: React.FC = () => {
       <Card title="在线测试">
         <Form name="basic" layout="vertical" onFinish={onFinish}>
           <Form.Item label="请求参数" name="userRequestParams">
-            <Input.TextArea value={data?.requestParams} />
+            <Input.TextArea defaultValue={userRequestParams} style={{display: 'none'}}  />
+            <CodeEditor
+              value={userRequestParams || ''}
+              language="json"
+              onChange={(evn) => setUserRequestParams(evn.target.value)}
+              padding={15}
+              style={{
+                backgroundColor: "#f5f5f5",
+                fontFamily: 'ui-monospace,SFMono-Regular,SF Mono,Consolas,Liberation Mono,Menlo,monospace',
+              }}
+            />
           </Form.Item>
 
           <Form.Item wrapperCol={{ span: 16 }}>
