@@ -1,9 +1,9 @@
 import { AvatarDropdown, AvatarName, Footer, Question } from '@/components';
 import { getLoginUserUsingGet } from '@/services/next-api/userController';
-import { LinkOutlined } from '@ant-design/icons';
 import { SettingDrawer } from '@ant-design/pro-components';
 import type { RunTimeLayoutConfig } from '@umijs/max';
-import { Link, history } from '@umijs/max';
+import { history } from '@umijs/max';
+import defaultSettings from '../config/defaultSettings';
 import { errorConfig } from './requestErrorConfig';
 const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/user/login';
@@ -76,14 +76,6 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
         width: '331px',
       },
     ],
-    links: isDev
-      ? [
-          <Link key="openapi" to="/umi/plugin/openapi" target="_blank">
-            <LinkOutlined />
-            <span>OpenAPI 文档</span>
-          </Link>,
-        ]
-      : [],
     menuHeaderRender: undefined,
     // 自定义 403 页面
     // unAccessible: <div>unAccessible</div>,
@@ -97,7 +89,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
             <SettingDrawer
               disableUrlParams
               enableDarkTheme
-              settings={initialState?.settings}
+              settings={defaultSettings}
               onSettingChange={(settings) => {
                 setInitialState((preInitialState) => ({
                   ...preInitialState,
@@ -109,7 +101,7 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
         </>
       );
     },
-    ...initialState?.settings,
+    ...defaultSettings,
   };
 };
 

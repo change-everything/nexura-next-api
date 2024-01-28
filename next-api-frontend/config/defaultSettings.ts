@@ -2,22 +2,23 @@ import { ProLayoutProps } from '@ant-design/pro-components';
 
 /**
  * @name
+ *
  */
 const Settings: ProLayoutProps & {
   pwa?: boolean;
   logo?: string;
 } = {
+  logo: './public/logo.svg',
   navTheme: 'light',
-  // 拂晓蓝
-  colorPrimary: '#1890ff',
-  layout: 'mix',
+  colorPrimary: '#722ED1',
+  layout: 'top',
   contentWidth: 'Fluid',
-  fixedHeader: false,
+  fixedHeader: true,
   fixSiderbar: true,
   colorWeak: false,
-  title: 'Ant Design Pro',
+  splitMenus: false,
+  title: 'next API',
   pwa: true,
-  logo: 'https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg',
   iconfontUrl: '',
   token: {
     // 参见ts声明，demo 见文档，通过token 修改样式

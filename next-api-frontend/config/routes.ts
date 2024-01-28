@@ -24,6 +24,12 @@ export default [
         path: '/admin/interface',
         component: './Admin/InterfaceInfo',
       },
+      {
+        name: '接口监控',
+        icon: 'table',
+        path: '/admin/analysis',
+        component: './Admin/InterfaceAnalysis',
+      },
     ],
   },
 

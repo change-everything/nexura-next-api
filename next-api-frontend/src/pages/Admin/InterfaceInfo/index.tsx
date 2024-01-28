@@ -331,7 +331,7 @@ const TableList: React.FC = () => {
       <ProTable<API.RuleListItem, API.PageParams>
         headerTitle={'查询表格'}
         actionRef={actionRef}
-        rowKey="key"
+        rowKey={(record: any, index: number) => `${record?.id ?? ''}${index.toString()}`}
         search={{
           labelWidth: 120,
         }}

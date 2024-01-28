@@ -7,10 +7,14 @@ import cn.nexura.nextapi.exception.BusinessException;
 import cn.nexura.nextapi.mapper.InterfaceInfoMapper;
 import cn.nexura.nextapi.mapper.UserInterfaceInfoMapper;
 import cn.nexura.nextapi.service.UserInterfaceInfoService;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
 * @author peiyp
@@ -45,6 +49,11 @@ public class UserInterfaceInfoServiceImpl extends ServiceImpl<UserInterfaceInfoM
 //        updateWrapper.gt("leftNum", 0);
         updateWrapper.setSql("left_num = left_num - 1, total_num = total_num + 1");
         return this.update(updateWrapper);
+    }
+
+    @Override
+    public List<UserInterfaceInfo> listTopInvokeInterfaceInfo(int limit) {
+        return baseMapper.listTopInvokeInterfaceInfo(limit);
     }
 }
 
