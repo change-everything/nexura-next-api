@@ -26,6 +26,10 @@ const Index: React.FC = () => {
   });
 
   const option = {
+    tooltip: {
+      trigger: 'item',
+      formatter: '{a} <br/>{b} 调用次数 : {c} 次 (占比：{d}%)'
+    },
     legend: {
       top: 'bottom',
     },
@@ -40,13 +44,18 @@ const Index: React.FC = () => {
     },
     series: [
       {
-        name: 'Nightingale Chart',
+        name: '接口调用分析',
         type: 'pie',
         radius: [50, 250],
         center: ['50%', '50%'],
         roseType: 'area',
         itemStyle: {
           borderRadius: 8,
+        },
+        emphasis: {
+          label: {
+            show: true
+          }
         },
         data: chartData,
       },

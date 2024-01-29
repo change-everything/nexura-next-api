@@ -33,6 +33,17 @@ public class InnerInterfaceInfoServiceImpl extends ServiceImpl<InterfaceInfoMapp
         wrapper.eq(InterfaceInfo::getUrl, path).eq(InterfaceInfo::getMethod, method).eq(InterfaceInfo::getStatus, InterfaceStatusEnum.ONLINE.getValue());
         return baseMapper.selectOne(wrapper);
     }
+
+    @Override
+    public InterfaceInfo testInterfaceAlive(String path, String method) {
+        if(StrUtil.isAllBlank(path, method)) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR);
+        }
+
+        LambdaQueryWrapper<InterfaceInfo> wrapper = Wrappers.lambdaQuery(InterfaceInfo.class);
+        wrapper.eq(InterfaceInfo::getUrl, path).eq(InterfaceInfo::getMethod, method);
+        return baseMapper.selectOne(wrapper);
+    }
 }
 
 

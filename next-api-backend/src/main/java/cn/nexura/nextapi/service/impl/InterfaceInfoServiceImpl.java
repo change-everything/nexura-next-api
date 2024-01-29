@@ -53,8 +53,7 @@ public class InterfaceInfoServiceImpl extends ServiceImpl<InterfaceInfoMapper, I
     }
 
     @Override
-    public List<InterfaceInfoVO> listInterface(QueryWrapper<InterfaceInfo> queryWrapper) {
-        List<InterfaceInfo> interfaceInfoList = this.list(queryWrapper);
+    public List<InterfaceInfoVO> listInterface(List<InterfaceInfo> interfaceInfoList) {
         List<Long> userIds = interfaceInfoList.stream()
                 .map(InterfaceInfo::getUserId)
                 .collect(Collectors.toList());
@@ -65,7 +64,9 @@ public class InterfaceInfoServiceImpl extends ServiceImpl<InterfaceInfoMapper, I
         return interfaceInfoList.stream().map(interfaceInfo -> {
             InterfaceInfoVO interfaceInfoVO = new InterfaceInfoVO();
             BeanUtil.copyProperties(interfaceInfo, interfaceInfoVO);
-            interfaceInfoVO.setUserName(userIdObjMap.get(interfaceInfo.getUserId()).get(0).getUserName());
+            List<User> userList = userIdObjMap.get(interfaceInfo.getUserId());
+            User user = userList.get(0);
+            interfaceInfoVO.setUserName(user.getUserName());
             return interfaceInfoVO;
         }).collect(Collectors.toList());
 

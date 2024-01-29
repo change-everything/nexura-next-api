@@ -28,27 +28,31 @@ public class NextApiClient {
 
     public static final String GATEWAY_URL = "http://127.0.0.1";
 
-    public String getNameUsingGet(String name) {
+    public String getNameUsingGet(String userRequestParams) {
+
+        User user = JSONUtil.toBean(userRequestParams, User.class);
         String result = HttpRequest.get(GATEWAY_URL + "/api/name/")
-                .body("name="+ name)
-                .addHeaders(getHeaderMap(name))
+                .body("name="+ user.getUserName())
+                .addHeaders(getHeaderMap(user.getUserName()))
                 .execute()
                 .body();
         System.out.println("result = " + result);
         return result;
     }
 
-    public String getNameUsingPost(String name) {
+    public String getNameUsingPost(String userRequestParams) {
+        User user = JSONUtil.toBean(userRequestParams, User.class);
         String result = HttpRequest.post(GATEWAY_URL + "/api/name/")
-                .body("name="+ name)
-                .addHeaders(getHeaderMap(name))
+                .body("name="+ user.getUserName())
+                .addHeaders(getHeaderMap(user.getUserName()))
                 .execute()
                 .body();;
         System.out.println("result = " + result);
         return result;
     }
 
-    public String getNameBody(User user) {
+    public String getNameBody(String userRequestParams) {
+        User user = JSONUtil.toBean(userRequestParams, User.class);
         String json = JSONUtil.toJsonStr(user);
         String result = HttpRequest.post(GATEWAY_URL + "/api/name/json/")
                 .body(json)

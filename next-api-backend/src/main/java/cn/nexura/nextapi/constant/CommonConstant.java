@@ -16,5 +16,10 @@ public interface CommonConstant {
      * 降序
      */
     String SORT_ORDER_DESC = " descend";
+
+    /**
+     * 调用失败
+     */
+    String INVOKE_ERROR = "Error request, response status: 401";
     
 }

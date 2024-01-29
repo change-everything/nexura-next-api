@@ -18,5 +18,5 @@ public interface InterfaceInfoService extends IService<InterfaceInfo> {
     void validInterfaceInfo(InterfaceInfo interfaceInfo, boolean add);
 
 
-    List<InterfaceInfoVO> listInterface(QueryWrapper<InterfaceInfo> queryWrapper);
+    List<InterfaceInfoVO> listInterface(List<InterfaceInfo> interfaceInfoList);
 }

@@ -17,4 +17,9 @@ public interface InnerInterfaceInfoService extends IService<InterfaceInfo> {
      */
     InterfaceInfo getInterfaceInfo(String path, String method);
 
+    /**
+     * 检测接口是否存活
+     */
+    InterfaceInfo testInterfaceAlive(String path, String method);
+
 }

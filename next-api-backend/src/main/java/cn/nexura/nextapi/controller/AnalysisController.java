@@ -46,11 +46,17 @@ public class AnalysisController {
     public BaseResponse<List<InterfaceInfoVO>> listTopInvokeInterfaceInfo() {
         List<UserInterfaceInfo> userInterfaceInfos = userInterfaceInfoService.listTopInvokeInterfaceInfo(5);
 
+        if (CollectionUtil.isEmpty(userInterfaceInfos)) {
+            throw new BusinessException(ErrorCode.SUCCESS, "暂无接口调用");
+        }
+
         Map<Long, List<UserInterfaceInfo>> interfaceInfoIdObjMap = userInterfaceInfos.stream()
                 .collect(Collectors.groupingBy(UserInterfaceInfo::getInterfaceInfoId));
 
         LambdaQueryWrapper<InterfaceInfo> wrapper = Wrappers.lambdaQuery(InterfaceInfo.class);
-        wrapper.in(InterfaceInfo::getId, interfaceInfoIdObjMap.keySet());
+        if (!interfaceInfoIdObjMap.keySet().isEmpty()) {
+            wrapper.in(InterfaceInfo::getId, interfaceInfoIdObjMap.keySet());
+        }
         List<InterfaceInfo> list = interfaceInfoService.list(wrapper);
         if (CollectionUtil.isEmpty(list)) {
             throw new BusinessException(ErrorCode.SYSTEM_ERROR);

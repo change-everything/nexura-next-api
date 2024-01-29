@@ -164,7 +164,8 @@ public class InterfaceInfoController {
             BeanUtils.copyProperties(interfaceInfoQueryRequest, interfaceInfoQuery);
         }
         QueryWrapper<InterfaceInfo> queryWrapper = new QueryWrapper<>(interfaceInfoQuery);
-        List<InterfaceInfoVO> interfaceInfoList = interfaceInfoService.listInterface(queryWrapper);
+        List<InterfaceInfo> list = interfaceInfoService.list(queryWrapper);
+        List<InterfaceInfoVO> interfaceInfoList = interfaceInfoService.listInterface(list);
         return ResultUtils.success(interfaceInfoList);
     }
     /**
@@ -175,7 +176,7 @@ public class InterfaceInfoController {
      * @return
      */
     @GetMapping("/list/page")
-    public BaseResponse<Page<InterfaceInfo>> listInterfaceInfoByPage(InterfaceInfoQueryRequest interfaceInfoQueryRequest, HttpServletRequest request) {
+    public BaseResponse<Page<InterfaceInfoVO>> listInterfaceInfoByPage(InterfaceInfoQueryRequest interfaceInfoQueryRequest, HttpServletRequest request) {
         if (interfaceInfoQueryRequest == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
@@ -197,7 +198,13 @@ public class InterfaceInfoController {
         queryWrapper.orderBy(StringUtils.isNotBlank(sortField),
                 sortOrder.equals(CommonConstant.SORT_ORDER_ASC), sortField);
         Page<InterfaceInfo> interfaceInfoPage = interfaceInfoService.page(new Page<>(current, size), queryWrapper);
-        return ResultUtils.success(interfaceInfoPage);
+
+        Page<InterfaceInfoVO> infoVoPage = new Page<>();
+        List<InterfaceInfo> interfaceInfoPageRecords = interfaceInfoPage.getRecords();
+        List<InterfaceInfoVO> interfaceInfoVOList = interfaceInfoService.listInterface(interfaceInfoPageRecords);
+        infoVoPage.setRecords(interfaceInfoVOList);
+
+        return ResultUtils.success(infoVoPage);
     }
     // endregion
 
@@ -212,19 +219,38 @@ public class InterfaceInfoController {
     @PostMapping("/online")
     @AuthCheck(mustRole = "admin")
     public BaseResponse<Boolean> onlineInterfaceInfo(@RequestBody IdRequest idRequest,
-                                                     HttpServletRequest request) {
+                                                     HttpServletRequest request) throws InvocationTargetException, IllegalAccessException {
         if (idRequest == null || idRequest.getId() <= 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
         long id = idRequest.getId();
-
-        // TODO: 2024/1/24 验证接口是否可用
 
 
         // 判断是否存在
         InterfaceInfo oldInterfaceInfo = interfaceInfoService.getById(id);
         if (oldInterfaceInfo == null) {
             throw new BusinessException(ErrorCode.NOT_FOUND_ERROR);
+        }
+
+        String name = oldInterfaceInfo.getName();
+        String exampleRequestParams = oldInterfaceInfo.getExampleRequestParams();
+
+        // Info验证接口是否可用
+        User loginUser = userService.getLoginUser(request);
+        String accessKey = loginUser.getAccessKey();
+        String secretKey = loginUser.getSecretKey();
+
+        NextApiClient nextApiClient = new NextApiClient(accessKey, secretKey);
+
+        try {
+            Method methodByName = ReflectUtil.getMethodByName(NextApiClient.class, name);
+            String result = (String) methodByName.invoke(nextApiClient, exampleRequestParams);
+            log.info(result);
+            if (CommonConstant.INVOKE_ERROR.equals(result)) {
+                throw new BusinessException(ErrorCode.OPERATION_ERROR, "接口不可用，发布失败");
+            }
+        } catch (Exception e) {
+            throw new BusinessException(ErrorCode.OPERATION_ERROR, "接口不可用，发布失败");
         }
 
 
@@ -288,21 +314,17 @@ public class InterfaceInfoController {
         if (!Objects.equals(oldInterfaceInfo.getStatus(), InterfaceStatusEnum.ONLINE.getValue())) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "接口未上线");
         }
-        String method = oldInterfaceInfo.getMethod();
-        String url = oldInterfaceInfo.getUrl();
         String name = oldInterfaceInfo.getName();
 
         User loginUser = userService.getLoginUser(request);
         String accessKey = loginUser.getAccessKey();
         String secretKey = loginUser.getSecretKey();
-        // TODO: 2024/1/25 调用接口
+        // 调用接口
         NextApiClient nextApiClient = new NextApiClient(accessKey, secretKey);
-        Gson gson = new Gson();
-        User user = gson.fromJson(userRequestParams, User.class);
+
         Method methodByName = ReflectUtil.getMethodByName(NextApiClient.class, name);
-        String usernameByPost = (String) methodByName.invoke(nextApiClient, user.getUserName());
-//        String usernameByPost = (String) ReflectUtil.invoke(nextApiClient, name, user.getUserName());
-//        String usernameByPost = nextApiClient.getNameBody(user);
+        String usernameByPost = (String) methodByName.invoke(nextApiClient, userRequestParams);
+
         return ResultUtils.success(usernameByPost);
     }
 }

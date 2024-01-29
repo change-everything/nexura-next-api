@@ -172,6 +172,31 @@ const TableList: React.FC = () => {
       },
     },
     {
+      title: '状态',
+      dataIndex: 'status',
+      hideInForm: true,
+      width: 75,
+      fixed: 'left',
+      valueEnum: {
+        0: {
+          text: '关闭',
+          status: 'Default',
+        },
+        1: {
+          text: '运行中',
+          status: 'Processing',
+        },
+        2: {
+          text: '已上线',
+          status: 'Success',
+        },
+        3: {
+          text: '异常',
+          status: 'Error',
+        },
+      },
+    },
+    {
       title: '描述',
       dataIndex: 'description',
       valueType: 'textarea',
@@ -265,30 +290,6 @@ const TableList: React.FC = () => {
             required: true,
           },
         ],
-      },
-    },
-    {
-      title: '状态',
-      dataIndex: 'status',
-      hideInForm: true,
-      width: 75,
-      valueEnum: {
-        0: {
-          text: '关闭',
-          status: 'Default',
-        },
-        1: {
-          text: '运行中',
-          status: 'Processing',
-        },
-        2: {
-          text: '已上线',
-          status: 'Success',
-        },
-        3: {
-          text: '异常',
-          status: 'Error',
-        },
       },
     },
     {

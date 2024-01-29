@@ -111,7 +111,7 @@ public class CustomGlobalFilter implements GlobalFilter, Ordered {
         // 查询数据接口是否存在
         InterfaceInfo interfaceInfo = null;
         try {
-            interfaceInfo = interfaceInfoService.getInterfaceInfo(path, method);
+            interfaceInfo = interfaceInfoService.testInterfaceAlive(path, method);
         } catch (Exception e) {
             log.error("getInterfaceInfo error", e);
         }
