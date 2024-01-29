@@ -1,3 +1,4 @@
+import CodeEdit from '@/components/CodeEdit';
 import {
   getInterfaceInfoByIdUsingGet,
   invokeInterfaceUsingPost,
@@ -16,56 +17,16 @@ import {
   Spin,
   message,
 } from 'antd';
-import React, { useEffect, useState } from 'react';
 import moment from 'moment';
 import 'monaco-editor/min/vs/editor/editor.main.css';
-import CodeEditor from "@uiw/react-textarea-code-editor";
-
+import React, { useEffect, useState } from 'react';
 
 const Index: React.FC = () => {
   const [data, setData] = useState<API.InterfaceInfo>();
   const [invokeRes, setInvokeRes] = useState<any>();
   const [invokeLoading, setInvokeLoading] = useState<boolean>(false);
-  const [userRequestParams, setUserRequestParams] = useState("");
+  const [userRequestParams, setUserRequestParams] = useState('');
   const params = useParams();
-
-  const loadData = async () => {
-    if (!params.id) {
-      message.error('参数不存在');
-      return;
-    }
-    try {
-      const res = await getInterfaceInfoByIdUsingGet({
-        id: params.id,
-      });
-      setData(res.data);
-      setUserRequestParams(res.data?.requestParams ?? '');
-    } catch (e: any) {
-      message.error('请求失败，' + e.message);
-    }
-  };
-
-  useEffect(() => {
-    loadData();
-  }, []);
-
-  const onFinish = async (values: any) => {
-    setInvokeLoading(true);
-    if (!params.id) {
-      message.error('参数不存在');
-      return;
-    }
-    try {
-      const res = await invokeInterfaceUsingPost({
-        id: params.id,
-        userRequestParams: userRequestParams,
-      });
-      setInvokeRes(res.data);
-    } catch (e: any) {
-      message.error('请求失败，' + e.message);
-    }
-    setInvokeLoading(false);
-  };
 
   const items: DescriptionsProps['items'] = [
     {
@@ -108,18 +69,59 @@ const Index: React.FC = () => {
     {
       key: '7',
       label: '创建时间',
-      children: moment(`${data?.createTime}`).format("YYYY-MM-DD HH:mm:ss"),
+      children: moment(`${data?.createTime}`).format('YYYY-MM-DD HH:mm:ss'),
       span: 2,
     },
     {
       key: '8',
       label: '更新时间',
-      children: moment(`${data?.updateTime}`).format("YYYY-MM-DD HH:mm:ss"),
+      children: moment(`${data?.updateTime}`).format('YYYY-MM-DD HH:mm:ss'),
       span: 2,
     },
   ];
 
-  console.log("请求参数====>", JSON.stringify(userRequestParams))
+  const loadData = async () => {
+    if (!params.id) {
+      message.error('参数不存在');
+      return;
+    }
+    try {
+      const res = await getInterfaceInfoByIdUsingGet({
+        id: params.id as any,
+      });
+      setData(res.data);
+      setUserRequestParams(res.data?.requestParams ?? '');
+    } catch (e: any) {
+      message.error('请求失败，' + e.message);
+    }
+  };
+
+  useEffect(() => {
+    loadData();
+  }, []);
+
+  const onFinish = async () => {
+    setInvokeLoading(true);
+    if (!params.id) {
+      message.error('参数不存在');
+      return;
+    }
+    try {
+      const res = await invokeInterfaceUsingPost({
+        url: data?.url,
+        method: data?.method,
+        id: params.id as any,
+        name: data?.name,
+        userRequestParams: userRequestParams,
+      });
+      setInvokeRes(res.data);
+    } catch (e: any) {
+      message.error('请求失败，' + e.message);
+    }
+    setInvokeLoading(false);
+  };
+
+  console.log('请求参数====>', JSON.stringify(userRequestParams));
   return (
     <PageContainer title="查看接口文档">
       <Card>
@@ -129,16 +131,10 @@ const Index: React.FC = () => {
       <Card title="在线测试">
         <Form name="basic" layout="vertical" onFinish={onFinish}>
           <Form.Item label="请求参数" name="userRequestParams">
-            <Input.TextArea defaultValue={userRequestParams} style={{display: 'none'}}  />
-            <CodeEditor
+            <Input.TextArea defaultValue={userRequestParams} style={{ display: 'none' }} />
+            <CodeEdit
               value={userRequestParams || ''}
-              language="json"
               onChange={(evn) => setUserRequestParams(evn.target.value)}
-              padding={15}
-              style={{
-                backgroundColor: "#f5f5f5",
-                fontFamily: 'ui-monospace,SFMono-Regular,SF Mono,Consolas,Liberation Mono,Menlo,monospace',
-              }}
             />
           </Form.Item>
 

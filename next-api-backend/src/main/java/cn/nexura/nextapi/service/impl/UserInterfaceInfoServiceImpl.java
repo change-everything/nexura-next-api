@@ -43,10 +43,24 @@ public class UserInterfaceInfoServiceImpl extends ServiceImpl<UserInterfaceInfoM
         if (interfaceInfoId <= 0 || userId <= 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
+        LambdaQueryWrapper<UserInterfaceInfo> wrapper = Wrappers.lambdaQuery(UserInterfaceInfo.class);
+        wrapper.eq(UserInterfaceInfo::getInterfaceInfoId, interfaceInfoId);
+        wrapper.eq(UserInterfaceInfo::getUserId, userId);
+        UserInterfaceInfo interfaceInfo = this.getOne(wrapper);
+        if (interfaceInfo == null) {
+            UserInterfaceInfo newUserInterfaceInfo = new UserInterfaceInfo();
+            newUserInterfaceInfo.setUserId(userId);
+            newUserInterfaceInfo.setInterfaceInfoId(interfaceInfoId);
+            boolean save = this.save(newUserInterfaceInfo);
+            if (!save) {
+                throw new BusinessException(ErrorCode.SYSTEM_ERROR, "接口数据更新失败");
+            }
+        }
+
         UpdateWrapper<UserInterfaceInfo> updateWrapper = new UpdateWrapper<>();
         updateWrapper.eq("interface_info_id", interfaceInfoId);
         updateWrapper.eq("user_id", userId);
-//        updateWrapper.gt("leftNum", 0);
+        updateWrapper.gt("left_num", 0);
         updateWrapper.setSql("left_num = left_num - 1, total_num = total_num + 1");
         return this.update(updateWrapper);
     }

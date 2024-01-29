@@ -8,6 +8,10 @@
             interface_info_id, sum(total_num) as total_num
         from
             next_api_db.user_interface_info
+        where
+            total_num != 0
+        and
+            is_delete != 1
         group by
             interface_info_id
         order by

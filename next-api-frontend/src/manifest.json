@@ -3,7 +3,7 @@
   "short_name": "next API",
   "display": "standalone",
   "start_url": "./?utm_source=homescreen",
-  "theme_color": "#002140",
+  "theme_color": "#722ED1",
   "background_color": "#001529",
   "icons": [
     {

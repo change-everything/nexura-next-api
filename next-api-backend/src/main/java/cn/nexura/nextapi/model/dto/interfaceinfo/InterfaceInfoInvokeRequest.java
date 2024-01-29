@@ -22,5 +22,23 @@ public class InterfaceInfoInvokeRequest implements Serializable {
      */
     private String userRequestParams;
 
+    /**
+     * 名称
+     */
+    private String name;
+
+    /**
+     * 接口地址
+     */
+    private String url;
+
+
+    /**
+     * 请求类型
+     */
+    private String method;
+
+
+
     private static final long serialVersionUID = 1L;
 }

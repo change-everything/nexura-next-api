@@ -1,13 +1,11 @@
-import { AvatarDropdown, AvatarName, Footer, Question } from '@/components';
+import { AvatarDropdown, AvatarName, Footer } from '@/components';
 import { getLoginUserUsingGet } from '@/services/next-api/userController';
-import { SettingDrawer } from '@ant-design/pro-components';
 import type { RunTimeLayoutConfig } from '@umijs/max';
 import { history } from '@umijs/max';
 import defaultSettings from '../config/defaultSettings';
+import logo from '../public/logo.svg';
 import { errorConfig } from './requestErrorConfig';
-const isDev = process.env.NODE_ENV === 'development';
 const loginPath = '/user/login';
-import logo from "../public/logo.svg";
 
 /**
  * @see  https://umijs.org/zh-CN/plugins/plugin-initial-state
@@ -36,10 +34,10 @@ export async function getInitialState(): Promise<{
 }
 
 // ProLayout 支持的api https://procomponents.ant.design/components/layout
-export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) => {
+// @ts-ignore
+export const layout: RunTimeLayoutConfig = ({ initialState }) => {
   return {
     logo: logo,
-    actionsRender: () => [<Question key="doc" />],
     avatarProps: {
       src: initialState?.currentUser?.userAvatar,
       title: <AvatarName />,
@@ -58,51 +56,8 @@ export const layout: RunTimeLayoutConfig = ({ initialState, setInitialState }) =
         history.push(loginPath);
       }
     },
-    bgLayoutImgList: [
-      {
-        src: 'https://mdn.alipayobjects.com/yuyan_qk0oxh/afts/img/D2LWSqNny4sAAAAAAAAAAAAAFl94AQBr',
-        left: 85,
-        bottom: 100,
-        height: '303px',
-      },
-      {
-        src: 'https://mdn.alipayobjects.com/yuyan_qk0oxh/afts/img/C2TWRpJpiC0AAAAAAAAAAAAAFl94AQBr',
-        bottom: -68,
-        right: -45,
-        height: '303px',
-      },
-      {
-        src: 'https://mdn.alipayobjects.com/yuyan_qk0oxh/afts/img/F6vSTbj8KpYAAAAAAAAAAAAAFl94AQBr',
-        bottom: 0,
-        left: 0,
-        width: '331px',
-      },
-    ],
+
     menuHeaderRender: undefined,
-    // 自定义 403 页面
-    // unAccessible: <div>unAccessible</div>,
-    // 增加一个 loading 的状态
-    childrenRender: (children) => {
-      // if (initialState?.loading) return <PageLoading />;
-      return (
-        <>
-          {children}
-          {/*{isDev && (*/}
-          {/*  <SettingDrawer*/}
-          {/*    disableUrlParams*/}
-          {/*    enableDarkTheme*/}
-          {/*    settings={defaultSettings}*/}
-          {/*    onSettingChange={(settings) => {*/}
-          {/*      setInitialState((preInitialState) => ({*/}
-          {/*        ...preInitialState,*/}
-          {/*        settings,*/}
-          {/*      }));*/}
-          {/*    }}*/}
-          {/*  />*/}
-          {/*)}*/}
-        </>
-      );
-    },
     ...defaultSettings,
   };
 };
@@ -117,3 +72,4 @@ export const request = {
   withCredentials: true,
   baseURL: 'http://localhost:8124/',
 };
+//Left side of comma operator is unused and has no side effect

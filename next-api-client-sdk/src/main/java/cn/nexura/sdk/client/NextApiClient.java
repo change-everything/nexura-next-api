@@ -29,17 +29,21 @@ public class NextApiClient {
     public static final String GATEWAY_URL = "http://127.0.0.1";
 
     public String getNameUsingGet(String name) {
-        HashMap<String, Object> paramMap = new HashMap<>();
-        paramMap.put("name", name);
-        String result = HttpUtil.get(GATEWAY_URL + "/api/name/", paramMap);
+        String result = HttpRequest.get(GATEWAY_URL + "/api/name/")
+                .body("name="+ name)
+                .addHeaders(getHeaderMap(name))
+                .execute()
+                .body();
         System.out.println("result = " + result);
         return result;
     }
 
     public String getNameUsingPost(String name) {
-        HashMap<String, Object> paramMap = new HashMap<>();
-        paramMap.put("name", name);
-        String result = HttpUtil.post(GATEWAY_URL + "/api/name/", paramMap);
+        String result = HttpRequest.post(GATEWAY_URL + "/api/name/")
+                .body("name="+ name)
+                .addHeaders(getHeaderMap(name))
+                .execute()
+                .body();;
         System.out.println("result = " + result);
         return result;
     }

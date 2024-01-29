@@ -1,5 +1,6 @@
 package cn.nexura.nextapi.controller;
 
+import cn.hutool.core.util.ReflectUtil;
 import cn.nexura.common.model.entity.InterfaceInfo;
 import cn.nexura.common.model.entity.User;
 import cn.nexura.nextapi.annotation.AuthCheck;
@@ -32,8 +33,11 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 
 @RestController
@@ -269,7 +273,7 @@ public class InterfaceInfoController {
      */
     @PostMapping("/invoke")
     public BaseResponse<Object> invokeInterface(@RequestBody InterfaceInfoInvokeRequest invokeRequest,
-                                                 HttpServletRequest request) {
+                                                 HttpServletRequest request) throws InvocationTargetException, IllegalAccessException {
         if (invokeRequest == null || invokeRequest.getId() <= 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
@@ -284,6 +288,9 @@ public class InterfaceInfoController {
         if (!Objects.equals(oldInterfaceInfo.getStatus(), InterfaceStatusEnum.ONLINE.getValue())) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "接口未上线");
         }
+        String method = oldInterfaceInfo.getMethod();
+        String url = oldInterfaceInfo.getUrl();
+        String name = oldInterfaceInfo.getName();
 
         User loginUser = userService.getLoginUser(request);
         String accessKey = loginUser.getAccessKey();
@@ -292,7 +299,10 @@ public class InterfaceInfoController {
         NextApiClient nextApiClient = new NextApiClient(accessKey, secretKey);
         Gson gson = new Gson();
         User user = gson.fromJson(userRequestParams, User.class);
-        String usernameByPost = nextApiClient.getNameBody(user);
+        Method methodByName = ReflectUtil.getMethodByName(NextApiClient.class, name);
+        String usernameByPost = (String) methodByName.invoke(nextApiClient, user.getUserName());
+//        String usernameByPost = (String) ReflectUtil.invoke(nextApiClient, name, user.getUserName());
+//        String usernameByPost = nextApiClient.getNameBody(user);
         return ResultUtils.success(usernameByPost);
     }
 }

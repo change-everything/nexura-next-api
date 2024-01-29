@@ -26,7 +26,7 @@ public class InterfaceInfoUpdateRequest implements Serializable {
     private String description;
 
     /**
-     * 请求头
+     * 请求参数
      */
     private String requestParams;
 

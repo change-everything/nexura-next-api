@@ -22,9 +22,9 @@ const Footer: React.FC = () => {
           blankTarget: true,
         },
         {
-          key: 'next API',
-          title: 'next API',
-          href: 'https://ant.design',
+          key: 'peiYP',
+          title: 'peiYP',
+          href: 'https://github.com/change-everything',
           blankTarget: true,
         },
       ]}

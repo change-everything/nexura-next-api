@@ -1,6 +1,6 @@
 import { listInterfaceInfoByPageUsingGet } from '@/services/next-api/interfaceInfoController';
 import { PageContainer } from '@ant-design/pro-components';
-import { List, message } from 'antd';
+import { Button, List, message } from 'antd';
 import React, { useEffect, useState } from 'react';
 
 const Index: React.FC = () => {
@@ -39,9 +39,9 @@ const Index: React.FC = () => {
           return (
             <List.Item
               actions={[
-                <a key={item.id} href={apiLink}>
+                <Button type="primary" key={item.id} href={apiLink}>
                   查看
-                </a>,
+                </Button>,
               ]}
             >
               <List.Item.Meta
