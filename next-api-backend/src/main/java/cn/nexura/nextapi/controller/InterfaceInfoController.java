@@ -1,5 +1,7 @@
 package cn.nexura.nextapi.controller;
 
+import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.lang.WeightRandom;
 import cn.hutool.core.util.ReflectUtil;
 import cn.nexura.common.model.entity.InterfaceInfo;
 import cn.nexura.common.model.entity.User;
@@ -10,16 +12,22 @@ import cn.nexura.nextapi.constant.CommonConstant;
 import cn.nexura.nextapi.constant.UserConstant;
 import cn.nexura.nextapi.exception.BusinessException;
 import cn.nexura.nextapi.exception.ThrowUtils;
+import cn.nexura.nextapi.model.InterfaceInfoParams;
+import cn.nexura.nextapi.model.InterfaceParams;
 import cn.nexura.nextapi.model.dto.interfaceinfo.InterfaceInfoAddRequest;
 import cn.nexura.nextapi.model.dto.interfaceinfo.InterfaceInfoInvokeRequest;
 import cn.nexura.nextapi.model.dto.interfaceinfo.InterfaceInfoQueryRequest;
 import cn.nexura.nextapi.model.dto.interfaceinfo.InterfaceInfoUpdateRequest;
 import cn.nexura.nextapi.model.enums.InterfaceStatusEnum;
 import cn.nexura.nextapi.model.vo.InterfaceInfoVO;
+import cn.nexura.nextapi.service.InterfaceInfoParamsService;
 import cn.nexura.nextapi.service.InterfaceInfoService;
+import cn.nexura.nextapi.service.InterfaceParamsService;
 import cn.nexura.nextapi.service.UserService;
 import cn.nexura.sdk.client.NextApiClient;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.IdWorker;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
@@ -51,6 +59,11 @@ public class InterfaceInfoController {
     @Resource
     private UserService userService;
 
+    @Resource
+    private InterfaceParamsService paramsService;
+
+    @Resource
+    private InterfaceInfoParamsService interfaceInfoParamsService;
 
 
     // region 增删改查
@@ -72,6 +85,28 @@ public class InterfaceInfoController {
         interfaceInfoService.validInterfaceInfo(interfaceInfo, true);
         User loginUser = userService.getLoginUser(request);
         interfaceInfo.setUserId(loginUser.getId());
+        interfaceInfo.setId(IdWorker.getId());
+
+        // 设置请求参数
+        List<InterfaceParams> requestParams = interfaceInfoAddRequest.getRequestParams();
+        requestParams.forEach(requestParam -> {
+            String paramName = requestParam.getParamName();
+            InterfaceParams existParam = paramsService.getOne(Wrappers.lambdaQuery(InterfaceParams.class)
+                    .eq(InterfaceParams::getParamName, paramName));
+            if (existParam == null) {
+                boolean save = paramsService.save(requestParam);
+                InterfaceInfoParams interfaceInfoParams = new InterfaceInfoParams();
+                interfaceInfoParams.setInterfaceInfoId(interfaceInfo.getId());
+                interfaceInfoParams.setInterfaceParamId(requestParam.getId());
+                interfaceInfoParamsService.save(interfaceInfoParams);
+            } else {
+                InterfaceInfoParams interfaceInfoParams = new InterfaceInfoParams();
+                interfaceInfoParams.setInterfaceInfoId(interfaceInfo.getId());
+                interfaceInfoParams.setInterfaceParamId(existParam.getId());
+                interfaceInfoParamsService.save(interfaceInfoParams);
+            }
+        });
+
         boolean result = interfaceInfoService.save(interfaceInfo);
         if (!result) {
             throw new BusinessException(ErrorCode.OPERATION_ERROR);
@@ -143,12 +178,16 @@ public class InterfaceInfoController {
      * @return
      */
     @GetMapping("/get")
-    public BaseResponse<InterfaceInfo> getInterfaceInfoById(long id) {
+    public BaseResponse<InterfaceInfoVO> getInterfaceInfoById(long id) {
         if (id <= 0) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
         InterfaceInfo interfaceInfo = interfaceInfoService.getById(id);
-        return ResultUtils.success(interfaceInfo);
+        InterfaceInfoVO interfaceInfoVO = new InterfaceInfoVO();
+        BeanUtil.copyProperties(interfaceInfo, interfaceInfoVO);
+        List<InterfaceParams> interfaceParams = interfaceInfoParamsService.selectParamsByInterfaceId(id);
+        interfaceInfoVO.setRequestParams(interfaceParams);
+        return ResultUtils.success(interfaceInfoVO);
     }
     /**
      * 获取列表（仅管理员可使用）

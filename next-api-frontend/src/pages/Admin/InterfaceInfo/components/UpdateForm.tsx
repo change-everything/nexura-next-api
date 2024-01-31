@@ -20,7 +20,7 @@ const UpdateForm: React.FC<Props> = (props) => {
     }
   }, [values]);
   return (
-    <Modal open={visible} onCancel={() => onCancel?.()} footer={null}>
+    <Modal open={visible} onCancel={() => onCancel?.()} footer={null} width="60%">
       <ProTable
         type="form"
         columns={columns}

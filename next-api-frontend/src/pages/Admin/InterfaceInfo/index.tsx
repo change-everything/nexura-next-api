@@ -1,17 +1,17 @@
 import CreateForm from '@/pages/Admin/InterfaceInfo/components/createForm';
 import {
   addInterfaceInfoUsingPost,
-  deleteInterfaceInfoUsingPost,
+  deleteInterfaceInfoUsingPost, getInterfaceInfoByIdUsingGet,
   listInterfaceInfoByPageUsingGet,
   offlineInterfaceInfoUsingPost,
   onlineInterfaceInfoUsingPost,
   updateInterfaceInfoUsingPost,
 } from '@/services/next-api/interfaceInfoController';
-import { PlusOutlined } from '@ant-design/icons';
+import {CloseOutlined, PlusOutlined} from '@ant-design/icons';
 import type { ActionType, ProColumns, ProDescriptionsItemProps } from '@ant-design/pro-components';
 import { PageContainer, ProDescriptions, ProTable } from '@ant-design/pro-components';
 import '@umijs/max';
-import { Button, Drawer, message } from 'antd';
+import {Button, Drawer, Form, Input, message, Space} from 'antd';
 import { SortOrder } from 'antd/lib/table/interface';
 import React, { useRef, useState } from 'react';
 import UpdateForm from './components/UpdateForm';
@@ -281,16 +281,82 @@ const TableList: React.FC = () => {
     },
     {
       title: '请求参数',
+      valueType: 'formList',
       dataIndex: 'requestParams',
-      valueType: 'jsonCode',
-      width: 200,
-      formItemProps: {
-        rules: [
-          {
-            required: true,
-          },
-        ],
-      },
+      hideInTable: true,
+      columns: [
+        {
+          valueType: 'group',
+          columns: [
+            {
+              title: '参数名',
+              dataIndex: 'paramName',
+              valueType: 'text',
+              formItemProps: {
+                rules: [
+                  {
+                    required: true,
+                    message: '此项为必填项',
+                  },
+                ],
+              },
+              width: 's',
+            },
+            {
+              title: '示例值',
+              dataIndex: 'exampleValue',
+              valueType: 'text',
+              formItemProps: {
+                rules: [
+                  {
+                    required: true,
+                    message: '此项为必填项',
+                  },
+                ],
+              },
+              width: 's',
+            },
+            {
+              title: '是否必填',
+              dataIndex: 'isMust',
+              valueType: 'select',
+              valueEnum: {
+                0: {
+                  text: '是',
+                  status: '0',
+                },
+                1: {
+                  text: '否',
+                  status: '1',
+                },
+              },
+              formItemProps: {
+                rules: [
+                  {
+                    required: true,
+                    message: '此项为必填项',
+                  },
+                ],
+              },
+              width: 's',
+            },
+            {
+              title: '描述',
+              dataIndex: 'description',
+              valueType: 'text',
+              formItemProps: {
+                rules: [
+                  {
+                    required: true,
+                    message: '此项为必填项',
+                  },
+                ],
+              },
+              width: 's',
+            },
+          ],
+        },
+      ]
     },
     {
       title: '创建人',
@@ -342,9 +408,15 @@ const TableList: React.FC = () => {
         ),
         <a
           key="update"
-          onClick={() => {
-            handleUpdateModalOpen(true);
-            setCurrentRow(record);
+          onClick={async () => {
+            const res = await getInterfaceInfoByIdUsingGet({id: record.id})
+            if (res.data) {
+              setCurrentRow(res.data);
+              handleUpdateModalOpen(true);
+            } else {
+              message.error("查询失败，", res?.message)
+            }
+
           }}
         >
           修改

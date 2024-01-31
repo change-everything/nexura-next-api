@@ -17,9 +17,8 @@ import {
   Spin,
   Table,
   Tabs,
-  message,
+  message, Tag,
 } from 'antd';
-import TabPane from 'antd/es/tabs/TabPane';
 import moment from 'moment';
 import 'monaco-editor/min/vs/editor/editor.main.css';
 import React, { useEffect, useState } from 'react';
@@ -52,7 +51,7 @@ const Index: React.FC = () => {
     {
       key: '3',
       label: '请求方法',
-      children: `${data?.method}`,
+      children: <Tag color="gold">{data?.method}</Tag>,
     },
     {
       key: '4',
@@ -180,10 +179,10 @@ const Index: React.FC = () => {
       <Divider />
       <Card>
         <Tabs onChange={onChange} type="card" size="large">
-          <TabPane tab="请求示例" key="1">
+          <Tabs.TabPane tab="请求示例" key="1">
             <Table dataSource={dataSource} columns={columns} pagination={false} />
-          </TabPane>
-          <TabPane tab="在线调试" key="2">
+          </Tabs.TabPane>
+          <Tabs.TabPane tab="在线调试" key="2">
             <Card title="请求参数">
               <Form name="basic" layout="vertical" onFinish={onFinish}>
                 <Form.Item name="userRequestParams">
@@ -205,7 +204,7 @@ const Index: React.FC = () => {
               <Spin spinning={invokeLoading} />
               <CodeEdit value={invokeRes || ''} onChange={() => {}} />
             </Card>
-          </TabPane>
+          </Tabs.TabPane>
         </Tabs>
       </Card>
     </PageContainer>

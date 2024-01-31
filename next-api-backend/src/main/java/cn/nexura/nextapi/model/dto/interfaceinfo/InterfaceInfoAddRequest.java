@@ -1,9 +1,11 @@
 package cn.nexura.nextapi.model.dto.interfaceinfo;
 
+import cn.nexura.nextapi.model.InterfaceParams;
 import com.baomidou.mybatisplus.annotation.TableField;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * @author PeiYP
@@ -30,7 +32,7 @@ public class InterfaceInfoAddRequest implements Serializable {
     /**
      * 请求参数
      */
-    private String requestParams;
+    private List<InterfaceParams> requestParams;
 
     /**
      * 请求头

@@ -2,7 +2,10 @@ package cn.nexura.nextapi.service;
 
 
 import cn.nexura.nextapi.model.InterfaceInfoParams;
+import cn.nexura.nextapi.model.InterfaceParams;
 import com.baomidou.mybatisplus.extension.service.IService;
+
+import java.util.List;
 
 /**
 * @author 86188
@@ -11,4 +14,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
 */
 public interface InterfaceInfoParamsService extends IService<InterfaceInfoParams> {
 
+    List<InterfaceParams> selectParamsByInterfaceId(long id);
 }

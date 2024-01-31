@@ -44,12 +44,6 @@ public class InterfaceInfo implements Serializable {
     /**
      * 请求头
      */
-    @TableField(value = "request_params")
-    private String requestParams;
-
-    /**
-     * 请求头
-     */
     @TableField(value = "example_request_params")
     private String exampleRequestParams;
 

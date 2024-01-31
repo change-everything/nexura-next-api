@@ -18,20 +18,20 @@ public class InterfaceInfoParams implements Serializable {
     /**
      * 主键
      */
-    @TableId(value = "id", type = IdType.AUTO)
+    @TableId(value = "id", type = IdType.ASSIGN_ID)
     private Long id;
 
     /**
      * 接口ID
      */
     @TableField(value = "interface_info_id")
-    private String interfaceInfoId;
+    private Long interfaceInfoId;
 
     /**
      * 参数ID
      */
     @TableField(value = "interface_param_id")
-    private String interfaceParamId;
+    private Long interfaceParamId;
 
     @TableField(exist = false)
     private static final long serialVersionUID = 1L;
