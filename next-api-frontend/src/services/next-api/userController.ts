@@ -150,6 +150,14 @@ export async function userRegisterUsingPost(
   });
 }
 
+/** resetKey POST /api/user/reset/key */
+export async function resetKeyUsingPost(options?: { [key: string]: any }) {
+  return request<API.BaseResponseBoolean_>('/api/user/reset/key', {
+    method: 'POST',
+    ...(options || {}),
+  });
+}
+
 /** updateUser POST /api/user/update */
 export async function updateUserUsingPost(
   body: API.UserUpdateRequest,

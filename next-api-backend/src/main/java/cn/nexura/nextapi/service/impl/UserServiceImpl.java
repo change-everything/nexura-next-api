@@ -9,6 +9,7 @@ import cn.nexura.common.model.entity.User;
 import cn.nexura.common.model.vo.LoginUserVO;
 import cn.nexura.common.model.vo.UserVO;
 import cn.nexura.common.service.InnerUserService;
+import cn.nexura.nextapi.constant.UserConstant;
 import cn.nexura.nextapi.model.enums.UserRoleEnum;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -42,11 +43,6 @@ import org.springframework.util.DigestUtils;
 @Slf4j
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
 
-    /**
-     * 盐值，混淆密码
-     */
-    private static final String SALT = "nexura";
-
     @Override
     public long userRegister(String userAccount, String userPassword, String checkPassword) {
         // 1. 校验
@@ -72,10 +68,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
                 throw new BusinessException(ErrorCode.PARAMS_ERROR, "账号重复");
             }
             // 2. 加密
-            String encryptPassword = DigestUtils.md5DigestAsHex((SALT + userPassword).getBytes());
+            String encryptPassword = DigestUtils.md5DigestAsHex((UserConstant.SALT + userPassword).getBytes());
             // 3.分配accessKey, secretKey
-            String accessKey = DigestUtil.md5Hex(SALT + userAccount + RandomUtil.randomNumbers(5));
-            String secretKey = DigestUtil.md5Hex(SALT + userAccount + RandomUtil.randomNumbers(8));
+            String accessKey = DigestUtil.md5Hex(UserConstant.SALT + userAccount + RandomUtil.randomNumbers(5));
+            String secretKey = DigestUtil.md5Hex(UserConstant.SALT + userAccount + RandomUtil.randomNumbers(8));
             // 4. 插入数据
             User user = new User();
             user.setUserAccount(userAccount);
@@ -103,7 +99,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "密码错误");
         }
         // 2. 加密
-        String encryptPassword = DigestUtils.md5DigestAsHex((SALT + userPassword).getBytes());
+        String encryptPassword = DigestUtils.md5DigestAsHex((UserConstant.SALT + userPassword).getBytes());
         // 查询用户是否存在
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("user_account", userAccount);

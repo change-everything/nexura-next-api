@@ -83,7 +83,7 @@ export async function listInterfaceInfoByPageUsingGet(
   params: API.listInterfaceInfoByPageUsingGETParams,
   options?: { [key: string]: any },
 ) {
-  return request<API.BaseResponsePageInterfaceInfo_>('/api/interfaceInfo/list/page', {
+  return request<API.BaseResponsePageInterfaceInfoVO_>('/api/interfaceInfo/list/page', {
     method: 'GET',
     params: {
       ...params,

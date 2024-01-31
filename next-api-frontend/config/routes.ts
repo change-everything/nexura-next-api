@@ -32,6 +32,7 @@ export default [
       },
     ],
   },
+  { name: '个人中心', icon: 'user', path: '/user/center', component: './User/Center' },
 
   { path: '*', layout: false, component: './404' },
 ];

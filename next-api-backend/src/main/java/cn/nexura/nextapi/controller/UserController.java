@@ -1,5 +1,7 @@
 package cn.nexura.nextapi.controller;
 
+import cn.hutool.core.util.RandomUtil;
+import cn.hutool.crypto.digest.DigestUtil;
 import cn.nexura.common.model.entity.User;
 import cn.nexura.common.model.vo.LoginUserVO;
 import cn.nexura.common.model.vo.UserVO;
@@ -307,4 +309,28 @@ public class UserController {
         ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR);
         return ResultUtils.success(true);
     }
+
+    /**
+     * 重新生成密钥
+     * @return
+     */
+    @PostMapping("/reset/key")
+    public BaseResponse<Boolean> resetKey(HttpServletRequest request) {
+        User loginUser = userService.getLoginUser(request);
+
+        // 3.分配accessKey, secretKey
+        String userAccount = loginUser.getUserAccount();
+        String accessKey = DigestUtil.md5Hex(UserConstant.SALT + userAccount + RandomUtil.randomNumbers(5));
+        String secretKey = DigestUtil.md5Hex(UserConstant.SALT + userAccount + RandomUtil.randomNumbers(8));
+
+        User user = new User();
+        user.setId(loginUser.getId());
+        user.setAccessKey(accessKey);
+        user.setSecretKey(secretKey);
+        boolean result = userService.updateById(user);
+        ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR);
+        return ResultUtils.success(true);
+    }
+
+
 }

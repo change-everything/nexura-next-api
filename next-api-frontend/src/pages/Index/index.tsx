@@ -29,6 +29,7 @@ const Index: React.FC = () => {
 
   return (
     <PageContainer title="在线接口开放平台">
+      <Button>下载SDK</Button>
       <List
         className="list"
         loading={loading}

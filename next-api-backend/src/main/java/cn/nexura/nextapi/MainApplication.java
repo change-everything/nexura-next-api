@@ -13,7 +13,12 @@ import org.springframework.scheduling.annotation.EnableScheduling;
  *
  * @author peiYP
  */
-// todo 如需开启 Redis，须移除 exclude 中的内容
+// TODO: 2024/1/31 前端新增、修改接口时，支持修改请求参数
+// TODO: 2024/1/31 前端请求参数回显
+// TODO: 2024/1/31 前端接口页面新增响应示例模块
+// TODO: 2024/1/31 前端接口页面新增请求示例模块
+// TODO: 2024/1/31 后端返回响应结果时，使用统一结构
+// TODO: 2024/1/31 定义统一业务返回码并回显前端
 @SpringBootApplication(exclude = {RedisAutoConfiguration.class})
 @MapperScan("cn.nexura.nextapi.mapper")
 @EnableScheduling

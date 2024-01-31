@@ -15,8 +15,11 @@ import {
   Form,
   Input,
   Spin,
+  Table,
+  Tabs,
   message,
 } from 'antd';
+import TabPane from 'antd/es/tabs/TabPane';
 import moment from 'moment';
 import 'monaco-editor/min/vs/editor/editor.main.css';
 import React, { useEffect, useState } from 'react';
@@ -26,6 +29,7 @@ const Index: React.FC = () => {
   const [invokeRes, setInvokeRes] = useState<any>();
   const [invokeLoading, setInvokeLoading] = useState<boolean>(false);
   const [userRequestParams, setUserRequestParams] = useState('');
+  const [exampleRequestParams, setExampleRequestParams] = useState('');
   const params = useParams();
 
   const items: DescriptionsProps['items'] = [
@@ -80,6 +84,10 @@ const Index: React.FC = () => {
     },
   ];
 
+  const onChange = (key: string) => {
+    console.log(key);
+  };
+
   const loadData = async () => {
     if (!params.id) {
       message.error('参数不存在');
@@ -90,7 +98,8 @@ const Index: React.FC = () => {
         id: params.id as any,
       });
       setData(res.data);
-      setUserRequestParams(res.data?.requestParams ?? '');
+      setUserRequestParams(res.data?.userRequestParams ?? '');
+      setExampleRequestParams(res.data?.exampleRequestParams ?? '');
     } catch (e: any) {
       message.error('请求失败，' + e.message);
     }
@@ -121,34 +130,83 @@ const Index: React.FC = () => {
     setInvokeLoading(false);
   };
 
-  console.log('请求参数====>', JSON.stringify(userRequestParams));
+  const dataSource = [
+    {
+      key: '1',
+      name: '胡彦斌',
+      age: 32,
+      address: '西湖区湖底公园1号',
+    },
+    {
+      key: '2',
+      name: '胡彦祖',
+      age: 42,
+      address: '西湖区湖底公园1号',
+    },
+  ];
+
+  const columns = [
+    {
+      title: '参数名称',
+      dataIndex: 'name',
+      key: 'name',
+    },
+    {
+      title: '参数类型',
+      dataIndex: 'age',
+      key: 'age',
+    },
+    {
+      title: '是否必填',
+      dataIndex: 'address',
+      key: 'address',
+    },
+    {
+      title: '示例值',
+      dataIndex: 'address',
+      key: 'address',
+    },
+    {
+      title: '参数描述',
+      dataIndex: 'address',
+      key: 'address',
+    },
+  ];
   return (
     <PageContainer title="查看接口文档">
       <Card>
         <Descriptions title={data?.name} bordered items={items} />
       </Card>
       <Divider />
-      <Card title="在线测试">
-        <Form name="basic" layout="vertical" onFinish={onFinish}>
-          <Form.Item label="请求参数" name="userRequestParams">
-            <Input.TextArea defaultValue={userRequestParams} style={{ display: 'none' }} />
-            <CodeEdit
-              value={userRequestParams || ''}
-              onChange={(evn) => setUserRequestParams(evn.target.value)}
-            />
-          </Form.Item>
+      <Card>
+        <Tabs onChange={onChange} type="card" size="large">
+          <TabPane tab="请求示例" key="1">
+            <Table dataSource={dataSource} columns={columns} pagination={false} />
+          </TabPane>
+          <TabPane tab="在线调试" key="2">
+            <Card title="请求参数">
+              <Form name="basic" layout="vertical" onFinish={onFinish}>
+                <Form.Item name="userRequestParams">
+                  <Input.TextArea defaultValue={exampleRequestParams} style={{ display: 'none' }} />
+                  <CodeEdit
+                    value={exampleRequestParams || ''}
+                    onChange={(evn) => setUserRequestParams(evn.target.value)}
+                  />
+                </Form.Item>
 
-          <Form.Item wrapperCol={{ span: 16 }}>
-            <Button type="primary" htmlType="submit">
-              调用
-            </Button>
-          </Form.Item>
-        </Form>
-      </Card>
-      <Divider />
-      <Card title="返回结果">
-        <Spin spinning={invokeLoading} />
-        {invokeRes}
+                <Form.Item wrapperCol={{ span: 16 }}>
+                  <Button type="primary" htmlType="submit">
+                    调用
+                  </Button>
+                </Form.Item>
+              </Form>
+            </Card>
+            <Card title="响应结果">
+              <Spin spinning={invokeLoading} />
+              <CodeEdit value={invokeRes || ''} onChange={() => {}} />
+            </Card>
+          </TabPane>
+        </Tabs>
       </Card>
     </PageContainer>
   );

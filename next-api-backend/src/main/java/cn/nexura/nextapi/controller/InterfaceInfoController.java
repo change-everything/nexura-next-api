@@ -323,8 +323,10 @@ public class InterfaceInfoController {
         NextApiClient nextApiClient = new NextApiClient(accessKey, secretKey);
 
         Method methodByName = ReflectUtil.getMethodByName(NextApiClient.class, name);
-        String usernameByPost = (String) methodByName.invoke(nextApiClient, userRequestParams);
+        String result = (String) methodByName.invoke(nextApiClient, userRequestParams);
 
-        return ResultUtils.success(usernameByPost);
+        // TODO: 2024/1/31 返回统一标准
+
+        return ResultUtils.success(result);
     }
 }
