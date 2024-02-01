@@ -2,6 +2,7 @@ package cn.nexura.nextapi.model.vo;
 
 import cn.nexura.common.model.entity.InterfaceInfo;
 import cn.nexura.nextapi.model.InterfaceParams;
+import cn.nexura.nextapi.model.InterfaceResponse;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -29,5 +30,10 @@ public class InterfaceInfoVO extends InterfaceInfo {
      * 请求参数
      */
     private List<InterfaceParams> requestParams;
+
+    /**
+     * 请求参数
+     */
+    private List<InterfaceResponse> responseParams;
 
 }

@@ -60,6 +60,12 @@ public class InterfaceInfo implements Serializable {
     private String responseHeader;
 
     /**
+     * 请求头
+     */
+    @TableField(value = "response_params_str")
+    private String responseParamsStr;
+
+    /**
      * 接口状态（0-关闭，1-开启）
      */
     @TableField(value = "status")

@@ -3,6 +3,8 @@ package cn.nexura.nextapi.controller;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.lang.WeightRandom;
 import cn.hutool.core.util.ReflectUtil;
+import cn.hutool.core.util.StrUtil;
+import cn.hutool.json.JSONUtil;
 import cn.nexura.common.model.entity.InterfaceInfo;
 import cn.nexura.common.model.entity.User;
 import cn.nexura.nextapi.annotation.AuthCheck;
@@ -14,16 +16,14 @@ import cn.nexura.nextapi.exception.BusinessException;
 import cn.nexura.nextapi.exception.ThrowUtils;
 import cn.nexura.nextapi.model.InterfaceInfoParams;
 import cn.nexura.nextapi.model.InterfaceParams;
+import cn.nexura.nextapi.model.InterfaceResponse;
 import cn.nexura.nextapi.model.dto.interfaceinfo.InterfaceInfoAddRequest;
 import cn.nexura.nextapi.model.dto.interfaceinfo.InterfaceInfoInvokeRequest;
 import cn.nexura.nextapi.model.dto.interfaceinfo.InterfaceInfoQueryRequest;
 import cn.nexura.nextapi.model.dto.interfaceinfo.InterfaceInfoUpdateRequest;
 import cn.nexura.nextapi.model.enums.InterfaceStatusEnum;
 import cn.nexura.nextapi.model.vo.InterfaceInfoVO;
-import cn.nexura.nextapi.service.InterfaceInfoParamsService;
-import cn.nexura.nextapi.service.InterfaceInfoService;
-import cn.nexura.nextapi.service.InterfaceParamsService;
-import cn.nexura.nextapi.service.UserService;
+import cn.nexura.nextapi.service.*;
 import cn.nexura.sdk.client.NextApiClient;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
@@ -64,6 +64,9 @@ public class InterfaceInfoController {
 
     @Resource
     private InterfaceInfoParamsService interfaceInfoParamsService;
+
+    @Resource
+    private InterfaceResponseService interfaceResponseService;
 
 
     // region 增删改查
@@ -106,6 +109,10 @@ public class InterfaceInfoController {
                 interfaceInfoParamsService.save(interfaceInfoParams);
             }
         });
+
+        List<InterfaceResponse> responseParams = interfaceInfoAddRequest.getResponseParams();
+        String responseParamsStr = JSONUtil.toJsonStr(responseParams);
+        interfaceInfo.setResponseParamsStr(responseParamsStr);
 
         boolean result = interfaceInfoService.save(interfaceInfo);
         if (!result) {
@@ -168,6 +175,42 @@ public class InterfaceInfoController {
         if (!oldInterfaceInfo.getUserId().equals(user.getId()) && !userService.isAdmin(request)) {
             throw new BusinessException(ErrorCode.NO_AUTH_ERROR);
         }
+
+        // 解绑所有参数
+        boolean remove = interfaceInfoParamsService.remove(Wrappers.lambdaQuery(InterfaceInfoParams.class)
+                .eq(InterfaceInfoParams::getInterfaceInfoId, id));
+
+        if (!remove) {
+            throw new BusinessException(ErrorCode.SYSTEM_ERROR, "更新失败");
+        }
+
+        // 设置请求参数
+        List<InterfaceParams> requestParams = interfaceInfoUpdateRequest.getRequestParams();
+        requestParams.forEach(requestParam -> {
+            String paramName = requestParam.getParamName();
+            InterfaceParams existParam = paramsService.getOne(Wrappers.lambdaQuery(InterfaceParams.class)
+                    .eq(InterfaceParams::getParamName, paramName));
+            if (existParam == null) {
+                boolean save = paramsService.save(requestParam);
+                if (!save) {
+                    throw new BusinessException(ErrorCode.SYSTEM_ERROR, "更新失败");
+                }
+                InterfaceInfoParams interfaceInfoParams = new InterfaceInfoParams();
+                interfaceInfoParams.setInterfaceInfoId(interfaceInfo.getId());
+                interfaceInfoParams.setInterfaceParamId(requestParam.getId());
+                interfaceInfoParamsService.save(interfaceInfoParams);
+            } else {
+                InterfaceInfoParams interfaceInfoParams = new InterfaceInfoParams();
+                interfaceInfoParams.setInterfaceInfoId(interfaceInfo.getId());
+                interfaceInfoParams.setInterfaceParamId(existParam.getId());
+                interfaceInfoParamsService.save(interfaceInfoParams);
+            }
+        });
+
+        List<InterfaceResponse> responseParams = interfaceInfoUpdateRequest.getResponseParams();
+        String responseParamsStr = JSONUtil.toJsonStr(responseParams);
+        interfaceInfo.setResponseParamsStr(responseParamsStr);
+
         boolean result = interfaceInfoService.updateById(interfaceInfo);
         return ResultUtils.success(result);
     }
@@ -187,6 +230,11 @@ public class InterfaceInfoController {
         BeanUtil.copyProperties(interfaceInfo, interfaceInfoVO);
         List<InterfaceParams> interfaceParams = interfaceInfoParamsService.selectParamsByInterfaceId(id);
         interfaceInfoVO.setRequestParams(interfaceParams);
+        String responseParamsStr = interfaceInfo.getResponseParamsStr();
+        if (StrUtil.isNotBlank(responseParamsStr)) {
+            List<InterfaceResponse> responseParams = JSONUtil.toList(responseParamsStr, InterfaceResponse.class);
+            interfaceInfoVO.setResponseParams(responseParams);
+        }
         return ResultUtils.success(interfaceInfoVO);
     }
     /**

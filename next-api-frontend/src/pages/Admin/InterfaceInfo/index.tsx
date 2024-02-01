@@ -1,17 +1,18 @@
 import CreateForm from '@/pages/Admin/InterfaceInfo/components/createForm';
 import {
   addInterfaceInfoUsingPost,
-  deleteInterfaceInfoUsingPost, getInterfaceInfoByIdUsingGet,
+  deleteInterfaceInfoUsingPost,
+  getInterfaceInfoByIdUsingGet,
   listInterfaceInfoByPageUsingGet,
   offlineInterfaceInfoUsingPost,
   onlineInterfaceInfoUsingPost,
   updateInterfaceInfoUsingPost,
 } from '@/services/next-api/interfaceInfoController';
-import {CloseOutlined, PlusOutlined} from '@ant-design/icons';
+import { PlusOutlined } from '@ant-design/icons';
 import type { ActionType, ProColumns, ProDescriptionsItemProps } from '@ant-design/pro-components';
 import { PageContainer, ProDescriptions, ProTable } from '@ant-design/pro-components';
 import '@umijs/max';
-import {Button, Drawer, Form, Input, message, Space} from 'antd';
+import { Button, Drawer, message } from 'antd';
 import { SortOrder } from 'antd/lib/table/interface';
 import React, { useRef, useState } from 'react';
 import UpdateForm from './components/UpdateForm';
@@ -317,6 +318,22 @@ const TableList: React.FC = () => {
               width: 's',
             },
             {
+              title: '参数类型',
+              dataIndex: 'paramType',
+              valueType: 'select',
+              valueEnum: {
+                string: {
+                  text: 'string',
+                  status: 'string',
+                },
+                number: {
+                  text: 'number',
+                  status: 'number',
+                },
+              },
+              width: 'xs',
+            },
+            {
               title: '是否必填',
               dataIndex: 'isMust',
               valueType: 'select',
@@ -356,7 +373,78 @@ const TableList: React.FC = () => {
             },
           ],
         },
-      ]
+      ],
+    },
+    {
+      title: '响应参数',
+      valueType: 'formList',
+      dataIndex: 'responseParams',
+      hideInTable: true,
+      columns: [
+        {
+          valueType: 'group',
+          columns: [
+            {
+              title: '参数名',
+              dataIndex: 'responseName',
+              valueType: 'text',
+              formItemProps: {
+                rules: [
+                  {
+                    required: true,
+                    message: '此项为必填项',
+                  },
+                ],
+              },
+              width: 's',
+            },
+            {
+              title: '示例值',
+              dataIndex: 'exampleValue',
+              valueType: 'text',
+              formItemProps: {
+                rules: [
+                  {
+                    required: true,
+                    message: '此项为必填项',
+                  },
+                ],
+              },
+              width: 's',
+            },
+            {
+              title: '参数类型',
+              dataIndex: 'responseType',
+              valueType: 'select',
+              valueEnum: {
+                string: {
+                  text: 'string',
+                  status: 'string',
+                },
+                number: {
+                  text: 'number',
+                  status: 'number',
+                },
+              },
+              width: 's',
+            },
+            {
+              title: '描述',
+              dataIndex: 'description',
+              valueType: 'text',
+              formItemProps: {
+                rules: [
+                  {
+                    required: true,
+                    message: '此项为必填项',
+                  },
+                ],
+              },
+              width: 's',
+            },
+          ],
+        },
+      ],
     },
     {
       title: '创建人',
@@ -382,7 +470,7 @@ const TableList: React.FC = () => {
       render: (_, record) => [
         record.status === 0 ? (
           <a
-            style={{color: "green"}}
+            style={{ color: 'green' }}
             key="online"
             onClick={() => {
               handleOnline(record);
@@ -395,7 +483,7 @@ const TableList: React.FC = () => {
         ),
         record.status === 1 ? (
           <a
-            style={{color: "orange"}}
+            style={{ color: 'orange' }}
             key="offline"
             onClick={() => {
               handleOffline(record);
@@ -409,20 +497,19 @@ const TableList: React.FC = () => {
         <a
           key="update"
           onClick={async () => {
-            const res = await getInterfaceInfoByIdUsingGet({id: record.id})
+            const res = await getInterfaceInfoByIdUsingGet({ id: record.id });
             if (res.data) {
               setCurrentRow(res.data);
               handleUpdateModalOpen(true);
             } else {
-              message.error("查询失败，", res?.message)
+              message.error('查询失败，', res?.message);
             }
-
           }}
         >
           修改
         </a>,
         <a
-          style={{color: "red"}}
+          style={{ color: 'red' }}
           key="remove"
           onClick={() => {
             handleRemove(record);

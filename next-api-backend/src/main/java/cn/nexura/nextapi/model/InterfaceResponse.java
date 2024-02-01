@@ -11,28 +11,22 @@ import java.util.Date;
 
 /**
  * 接口参数信息
- * @TableName interface_params
+ * @TableName interface_response
  */
-@TableName(value ="interface_params")
+@TableName(value ="interface_response")
 @Data
-public class InterfaceParams implements Serializable {
+public class InterfaceResponse implements Serializable {
     /**
      * 主键
      */
-    @TableId(value = "id", type = IdType.ASSIGN_ID)
+    @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
     /**
-     * 参数名
+     * 响应名称
      */
-    @TableField(value = "param_name")
-    private String paramName;
-
-    /**
-     * 参数名
-     */
-    @TableField(value = "param_type")
-    private String paramType;
+    @TableField(value = "response_name")
+    private String responseName;
 
     /**
      * 描述
@@ -41,17 +35,16 @@ public class InterfaceParams implements Serializable {
     private String description;
 
     /**
-     * 是否必填(0-必填, 1-非必填)
+     * 响应类型
      */
-    @TableField(value = "is_must")
-    private Integer isMust;
+    @TableField(value = "response_type")
+    private String responseType;
 
     /**
      * 示例值
      */
     @TableField(value = "example_value")
     private String exampleValue;
-
 
     /**
      * 创建时间

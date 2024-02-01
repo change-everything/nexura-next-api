@@ -1,8 +1,11 @@
 package cn.nexura.nextapi.model.dto.interfaceinfo;
 
+import cn.nexura.nextapi.model.InterfaceParams;
+import cn.nexura.nextapi.model.InterfaceResponse;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * @author PeiYP
@@ -28,7 +31,12 @@ public class InterfaceInfoUpdateRequest implements Serializable {
     /**
      * 请求参数
      */
-    private String requestParams;
+    private List<InterfaceParams> requestParams;
+
+    /**
+     * 响应参数
+     */
+    private List<InterfaceResponse> responseParams;
 
     /**
      * 接口地址

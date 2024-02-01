@@ -5,9 +5,9 @@ declare namespace API {
     message?: string;
   };
 
-  type BaseResponseInterfaceInfo_ = {
+  type BaseResponseInterfaceInfoVO_ = {
     code?: number;
-    data?: InterfaceInfo;
+    data?: InterfaceInfoVO;
     message?: string;
   };
 
@@ -128,30 +128,14 @@ declare namespace API {
     id?: number;
   };
 
-  type InterfaceInfo = {
-    createTime?: string;
-    description?: string;
-    exampleRequestParams?: string;
-    id?: number;
-    isDelete?: number;
-    method?: string;
-    name?: string;
-    requestHeader?: string;
-    requestParams?: string;
-    responseHeader?: string;
-    status?: number;
-    updateTime?: string;
-    url?: string;
-    userId?: number;
-  };
-
   type InterfaceInfoAddRequest = {
     description?: string;
     method?: string;
     name?: string;
     requestHeader?: string;
-    requestParams?: string;
+    requestParams?: InterfaceParams[];
     responseHeader?: string;
+    responseParams?: InterfaceResponse[];
     url?: string;
   };
 
@@ -169,8 +153,9 @@ declare namespace API {
     method?: string;
     name?: string;
     requestHeader?: string;
-    requestParams?: string;
+    requestParams?: InterfaceParams[];
     responseHeader?: string;
+    responseParams?: InterfaceResponse[];
     status?: number;
     url?: string;
   };
@@ -184,14 +169,39 @@ declare namespace API {
     method?: string;
     name?: string;
     requestHeader?: string;
-    requestParams?: string;
+    requestParams?: InterfaceParams[];
     responseHeader?: string;
+    responseParams?: InterfaceResponse[];
+    responseParamsStr?: string;
     status?: number;
     totalNum?: number;
     updateTime?: string;
     url?: string;
     userId?: number;
     userName?: string;
+  };
+
+  type InterfaceParams = {
+    createTime?: string;
+    description?: string;
+    exampleValue?: string;
+    id?: number;
+    isDelete?: number;
+    isMust?: number;
+    paramName?: string;
+    paramType?: string;
+    updateTime?: string;
+  };
+
+  type InterfaceResponse = {
+    createTime?: string;
+    description?: string;
+    exampleValue?: string;
+    id?: number;
+    isDelete?: number;
+    responseName?: string;
+    responseType?: string;
+    updateTime?: string;
   };
 
   type listInterfaceInfoByPageUsingGETParams = {

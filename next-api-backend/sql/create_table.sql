@@ -95,6 +95,18 @@ create table if not exists `interface_params`
 create table if not exists `interface_info_params`
 (
     `id` bigint not null auto_increment comment '主键' primary key,
-    `interface_info_id` varchar(256) not null comment '接口ID',
-    `interface_param_id` varchar(256) null comment '参数ID'
+    `interface_info_id` bigint not null comment '接口ID',
+    `interface_param_id` bigint not null comment '参数ID'
+) comment '接口参数信息关联表';
+
+create table if not exists `interface_response`
+(
+    `id` bigint not null auto_increment comment '主键' primary key,
+    `response_name` varchar(256) not null comment '响应名称',
+    `description` varchar(256) null comment '描述',
+    `response_type` varchar(32) default 0 not null comment '响应类型',
+    `example_value` text null comment '示例值',
+    `create_time` datetime default CURRENT_TIMESTAMP not null comment '创建时间',
+    `update_time` datetime default CURRENT_TIMESTAMP not null on update CURRENT_TIMESTAMP comment '更新时间',
+    `is_delete` tinyint default 0 not null comment '是否删除(0-未删, 1-已删)'
 ) comment '接口参数信息';

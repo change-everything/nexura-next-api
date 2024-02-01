@@ -14,10 +14,12 @@ import {
   Divider,
   Form,
   Input,
+  Space,
   Spin,
   Table,
   Tabs,
-  message, Tag,
+  Tag,
+  message,
 } from 'antd';
 import moment from 'moment';
 import 'monaco-editor/min/vs/editor/editor.main.css';
@@ -27,9 +29,12 @@ const Index: React.FC = () => {
   const [data, setData] = useState<API.InterfaceInfo>();
   const [invokeRes, setInvokeRes] = useState<any>();
   const [invokeLoading, setInvokeLoading] = useState<boolean>(false);
-  const [userRequestParams, setUserRequestParams] = useState('');
   const [exampleRequestParams, setExampleRequestParams] = useState('');
   const params = useParams();
+
+  const [requestDataSource, setRequestDataSource] = useState<API.InterfaceParams[]>([]);
+  const [responseDataSource, setResponseDataSource] = useState<API.InterfaceResponse[]>([]);
+  const [exampleResponse, setExampleResponse] = useState('');
 
   const items: DescriptionsProps['items'] = [
     {
@@ -83,6 +88,12 @@ const Index: React.FC = () => {
     },
   ];
 
+  const finalResult = {
+    data: '',
+    code: 0,
+    msg: 'success',
+  };
+
   const onChange = (key: string) => {
     console.log(key);
   };
@@ -97,8 +108,17 @@ const Index: React.FC = () => {
         id: params.id as any,
       });
       setData(res.data);
-      setUserRequestParams(res.data?.userRequestParams ?? '');
-      setExampleRequestParams(res.data?.exampleRequestParams ?? '');
+      setRequestDataSource(res.data?.requestParams ?? []);
+      setResponseDataSource(res.data?.responseParams ?? []);
+      const responseData: API.InterfaceResponse[] = res.data?.responseParams ?? [];
+      // 构建目标数据结构
+      const transformedData: { [key: string]: string } = responseData.reduce((acc, param) => {
+        acc[param.responseName] = param.exampleValue;
+        return acc;
+      }, {});
+      setExampleRequestParams(JSON.stringify(transformedData ?? '{}', null, 2));
+      finalResult.data = transformedData;
+      setExampleResponse(JSON.stringify(finalResult, null, 2));
     } catch (e: any) {
       message.error('请求失败，' + e.message);
     }
@@ -120,57 +140,102 @@ const Index: React.FC = () => {
         method: data?.method,
         id: params.id as any,
         name: data?.name,
-        userRequestParams: userRequestParams,
+        userRequestParams: exampleRequestParams,
       });
-      setInvokeRes(res.data);
+      finalResult.data = res.data;
+      setInvokeRes(JSON.stringify(finalResult, null, 2));
     } catch (e: any) {
+      finalResult.data = '';
+      finalResult.data = '50000';
+      finalResult.msg = '请求失败, ' + e.message;
+      setInvokeRes(JSON.stringify(finalResult, null, 2));
       message.error('请求失败，' + e.message);
     }
     setInvokeLoading(false);
   };
 
-  const dataSource = [
-    {
-      key: '1',
-      name: '胡彦斌',
-      age: 32,
-      address: '西湖区湖底公园1号',
-    },
-    {
-      key: '2',
-      name: '胡彦祖',
-      age: 42,
-      address: '西湖区湖底公园1号',
-    },
-  ];
-
-  const columns = [
+  const requestColumns = [
     {
       title: '参数名称',
-      dataIndex: 'name',
-      key: 'name',
+      dataIndex: 'paramName',
+      key: 'paramName',
     },
     {
       title: '参数类型',
-      dataIndex: 'age',
-      key: 'age',
-    },
-    {
-      title: '是否必填',
-      dataIndex: 'address',
-      key: 'address',
+      dataIndex: 'paramType',
+      key: 'paramType',
     },
     {
       title: '示例值',
-      dataIndex: 'address',
-      key: 'address',
+      dataIndex: 'exampleValue',
+      key: 'exampleValue',
+    },
+    {
+      title: '是否必填',
+      dataIndex: 'isMust',
+      key: 'isMust',
+      render: (_, record) => [record.isMust === 0 ? '是' : '否'],
     },
     {
       title: '参数描述',
-      dataIndex: 'address',
-      key: 'address',
+      dataIndex: 'description',
+      key: 'description',
     },
   ];
+
+  const responseColumns = [
+    {
+      title: '参数名称',
+      dataIndex: 'responseName',
+      key: 'responseName',
+    },
+    {
+      title: '参数类型',
+      dataIndex: 'responseType',
+      key: 'responseType',
+    },
+    {
+      title: '示例值',
+      dataIndex: 'exampleValue',
+      key: 'exampleValue',
+    },
+    {
+      title: '参数描述',
+      dataIndex: 'description',
+      key: 'description',
+    },
+  ];
+  const codeColumns = [
+    {
+      title: '返回码',
+      dataIndex: 'codeName',
+      key: 'codeName',
+    },
+    {
+      title: '返回码描述',
+      dataIndex: 'description',
+      key: 'description',
+    },
+  ];
+
+  const codeDataSource = [
+    {
+      key: '1',
+      codeName: '0',
+      description: '成功',
+    },
+    {
+      key: '2',
+      codeName: '40400',
+      description: '请求路径错误',
+    },
+    {
+      key: '3',
+      codeName: '50000',
+      description: '系统错误',
+    },
+  ];
+
   return (
     <PageContainer title="查看接口文档">
       <Card>
@@ -180,7 +245,21 @@ const Index: React.FC = () => {
       <Card>
         <Tabs onChange={onChange} type="card" size="large">
           <Tabs.TabPane tab="请求示例" key="1">
-            <Table dataSource={dataSource} columns={columns} pagination={false} />
+            <h3>请求参数</h3>
+            <Table dataSource={requestDataSource} columns={requestColumns} pagination={false} />
+            <Divider />
+            <h3>响应参数</h3>
+            <Table dataSource={responseDataSource} columns={responseColumns} pagination={false} />
+            <Divider />
+            <h3>
+              <Space>
+                响应示例<Tag color="purple">正常</Tag>
+              </Space>
+            </h3>
+            <CodeEdit value={exampleResponse} onChange={() => {}} />
+            <Divider />
+            <h3>响应码</h3>
+            <Table dataSource={codeDataSource} columns={codeColumns} pagination={false} />
           </Tabs.TabPane>
           <Tabs.TabPane tab="在线调试" key="2">
             <Card title="请求参数">
