@@ -110,10 +110,10 @@ const Index: React.FC = () => {
       setData(res.data);
       setRequestDataSource(res.data?.requestParams ?? []);
       setResponseDataSource(res.data?.responseParams ?? []);
-      const responseData: API.InterfaceResponse[] = res.data?.responseParams ?? [];
+      const requestData: API.InterfaceParams[] = res.data?.requestParams ?? [];
       // 构建目标数据结构
-      const transformedData: { [key: string]: string } = responseData.reduce((acc, param) => {
-        acc[param.responseName] = param.exampleValue;
+      const transformedData: { [key: string]: string } = requestData.reduce((acc, param) => {
+        acc[param.paramName] = param.exampleValue;
         return acc;
       }, {});
       setExampleRequestParams(JSON.stringify(transformedData ?? '{}', null, 2));

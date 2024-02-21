@@ -26,12 +26,12 @@ public class NextApiClient {
 
     private String secretKey;
 
-    public static final String GATEWAY_URL = "http://127.0.0.1";
+    public static final String GATEWAY_URL = "http://openapi.nexuracloud.cn/api";
 
     public String getNameUsingGet(String userRequestParams) {
 
         User user = JSONUtil.toBean(userRequestParams, User.class);
-        String result = HttpRequest.get(GATEWAY_URL + "/api/name/")
+        String result = HttpRequest.get(GATEWAY_URL + "/name/")
                 .body("name="+ user.getUserName())
                 .addHeaders(getHeaderMap(user.getUserName()))
                 .execute()
@@ -42,7 +42,7 @@ public class NextApiClient {
 
     public String getNameUsingPost(String userRequestParams) {
         User user = JSONUtil.toBean(userRequestParams, User.class);
-        String result = HttpRequest.post(GATEWAY_URL + "/api/name/")
+        String result = HttpRequest.post(GATEWAY_URL + "/name/")
                 .body("name="+ user.getUserName())
                 .addHeaders(getHeaderMap(user.getUserName()))
                 .execute()
@@ -54,7 +54,7 @@ public class NextApiClient {
     public String getNameBody(String userRequestParams) {
         User user = JSONUtil.toBean(userRequestParams, User.class);
         String json = JSONUtil.toJsonStr(user);
-        String result = HttpRequest.post(GATEWAY_URL + "/api/name/json/")
+        String result = HttpRequest.post(GATEWAY_URL + "/name/json/")
                 .body(json)
                 .addHeaders(getHeaderMap(json))
                 .execute()

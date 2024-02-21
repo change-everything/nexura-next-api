@@ -8,23 +8,24 @@ const Footer: React.FC = () => {
       style={{
         background: 'none',
       }}
+      copyright={'2024 peiYP'}
       links={[
         {
-          key: 'next API',
-          title: 'next API',
-          href: 'https://pro.ant.design',
+          key: 'peiYP',
+          title: 'peiYP',
+          href: 'https://github.com/change-everything',
           blankTarget: true,
         },
         {
           key: 'github',
           title: <GithubOutlined />,
-          href: 'https://github.com/ant-design/ant-design-pro',
+          href: 'https://github.com/change-everything',
           blankTarget: true,
         },
         {
-          key: 'peiYP',
-          title: 'peiYP',
-          href: 'https://github.com/change-everything',
+          key: '津ICP备2024012731号',
+          title: '津ICP备2024012731号',
+          href: 'https://beian.miit.gov.cn/',
           blankTarget: true,
         },
       ]}

@@ -23,7 +23,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @MapperScan("cn.nexura.nextapi.mapper")
 @EnableScheduling
 @EnableAspectJAutoProxy(proxyTargetClass = true, exposeProxy = true)
-@EnableDubbo
+//@EnableDubbo
 public class MainApplication {
 
     public static void main(String[] args) {
