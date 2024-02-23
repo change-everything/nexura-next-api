@@ -28,6 +28,18 @@ public class NextApiClient {
 
     public static final String GATEWAY_URL = "http://openapi.nexuracloud.cn/api";
 
+    public void doQuestionSubmit(String userRequestParams) {
+        System.out.println("判题接口");
+    }
+
+    public void genChartByAiAsync(String userRequestParams) {
+        System.out.println("智能分析接口");
+    }
+
+    public void segment(String userRequestParams) {
+        System.out.println("分割接口");
+    }
+
     public String getNameUsingGet(String userRequestParams) {
 
         User user = JSONUtil.toBean(userRequestParams, User.class);

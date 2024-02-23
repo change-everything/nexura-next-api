@@ -8,7 +8,7 @@
 基于 React + Spring Boot + Dubbo + Gateway 的 API 接口开放调用平台。管理员可以接入并发布接口，可视化各接口调用情况；用户可以开通接口调用权限、浏览接口及在线调试，并通过客户端 SDK 轻松调用接口。
 
 ## 流程图
-![流程图.png](next-bi-backend%2Fimage%2F%E6%B5%81%E7%A8%8B%E5%9B%BE.png)
+![process.png](next-api-backend%2Fimg%2Fprocess.png)
 
 
 ## 项目亮点
