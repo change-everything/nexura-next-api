@@ -48,7 +48,7 @@ public class CustomGlobalFilter implements GlobalFilter, Ordered {
     @DubboReference
     private InnerUserInterfaceInfoService userInterfaceInfoService;
 
-    public static final String BASE_URL = "http://127.0.0.1:9178";
+//    public static final String BASE_URL = "http://127.0.0.1:9178";
 
 
     public static final List<String> IP_WHITE_LIST = Arrays.asList("127.0.0.1");
@@ -69,7 +69,7 @@ public class CustomGlobalFilter implements GlobalFilter, Ordered {
             return response.setComplete();
         }
         String method = request.getMethodValue();
-        String path = BASE_URL + request.getPath().value();
+        String path = request.getPath().value();
 
         // 用户鉴权
         HttpHeaders headers = request.getHeaders();
@@ -150,7 +150,7 @@ public class CustomGlobalFilter implements GlobalFilter, Ordered {
                             // 拼接字符串
                             return super.writeWith(
                                     fluxBody.map(dataBuffer -> {
-                                        // 7. todo 调用成功，接口调用次数 + 1 invokeCount
+                                        // 7. 调用成功，接口调用次数 + 1 invokeCount
                                         try {
                                             userInterfaceInfoService.invokeCount(interfaceInfoId, userId);
                                         } catch (Exception e) {

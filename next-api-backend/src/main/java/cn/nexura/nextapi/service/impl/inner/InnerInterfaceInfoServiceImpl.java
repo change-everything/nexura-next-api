@@ -41,7 +41,7 @@ public class InnerInterfaceInfoServiceImpl extends ServiceImpl<InterfaceInfoMapp
         }
 
         LambdaQueryWrapper<InterfaceInfo> wrapper = Wrappers.lambdaQuery(InterfaceInfo.class);
-        wrapper.eq(InterfaceInfo::getUrl, path).eq(InterfaceInfo::getMethod, method);
+        wrapper.like(InterfaceInfo::getUrl, path).eq(InterfaceInfo::getMethod, method);
         return baseMapper.selectOne(wrapper);
     }
 }

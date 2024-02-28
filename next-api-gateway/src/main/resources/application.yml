@@ -6,10 +6,18 @@ spring:
       default-filters:
         - AddResponseHeader=source, nexura
       routes:
-        - id: api_route
-          uri: http://127.0.0.1:9178
+        - id: oj_route
+          uri: http://127.0.0.0:18121
           predicates:
-            - Path=/api/**
+            - Path=/nextoj/**
+        - id: bi_route
+          uri: http://127.0.0.0:18123
+          predicates:
+            - Path=/nextbi/**
+        - id: brainu_route
+          uri: http://127.0.0.0:18221
+          predicates:
+            - Path=/brainu/**
 
 dubbo:
   application:
@@ -19,4 +27,6 @@ dubbo:
     port: -1
   registry:
     id: nacos-registry
-    address: nacos://120.46.207.211:8848
+    address: nacos://43.143.20.63:8848
+  provider:
+    prefer-serialization: fastjson2

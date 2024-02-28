@@ -70,6 +70,6 @@ export const layout: RunTimeLayoutConfig = ({ initialState }) => {
 export const request = {
   ...errorConfig,
   withCredentials: true,
-  baseURL: 'http://localhost:8124/',
+  baseURL: 'https://nextapi.nexuracloud.cn/',
 };
 //Left side of comma operator is unused and has no side effect
