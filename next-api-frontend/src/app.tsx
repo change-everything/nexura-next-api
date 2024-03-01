@@ -73,3 +73,4 @@ export const request = {
   baseURL: 'https://nextapi.nexuracloud.cn/',
 };
 //Left side of comma operator is unused and has no side effect
+//docker run --network=host -dit -p 9000:9000 -p 9090:9090 --name minio -e "MINIO_ACCESS_KEY=admin" -e "MINIO_SECRET_KEY=FuYR6sXBxpS9" minio/minio server /data --address "minio.nexuracloud.cn:9000" --console-address ":9090"

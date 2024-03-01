@@ -7,15 +7,15 @@ spring:
         - AddResponseHeader=source, nexura
       routes:
         - id: oj_route
-          uri: http://127.0.0.0:18121
+          uri: http://127.0.0.0:18121/api
           predicates:
             - Path=/nextoj/**
         - id: bi_route
-          uri: http://127.0.0.0:18123
+          uri: http://127.0.0.0:18123/api
           predicates:
             - Path=/nextbi/**
         - id: brainu_route
-          uri: http://127.0.0.0:18221
+          uri: http://127.0.0.0:18221/api
           predicates:
             - Path=/brainu/**
 

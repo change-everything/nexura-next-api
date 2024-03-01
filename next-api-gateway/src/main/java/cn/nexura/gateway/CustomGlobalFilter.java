@@ -71,6 +71,9 @@ public class CustomGlobalFilter implements GlobalFilter, Ordered {
         String method = request.getMethodValue();
         String path = request.getPath().value();
 
+        log.info("method={}", method);
+        log.info("path={}", path);
+
         // 用户鉴权
         HttpHeaders headers = request.getHeaders();
         String accessKey = headers.getFirst("accessKey");
@@ -78,6 +81,8 @@ public class CustomGlobalFilter implements GlobalFilter, Ordered {
         String timestamp = headers.getFirst("timestamp");
         String sign = headers.getFirst("sign");
         String body = headers.getFirst("body");
+
+
 
         // 对比AK是否一致
         User invokeUser = null;
@@ -119,6 +124,8 @@ public class CustomGlobalFilter implements GlobalFilter, Ordered {
         if (interfaceInfo == null) {
             return handleNoAuth(response);
         }
+
+        log.info("放行");
 
         return handleResponse(exchange, chain, interfaceInfo.getId(), invokeUser.getId());
     }

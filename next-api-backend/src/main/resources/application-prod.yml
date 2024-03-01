@@ -1,11 +1,23 @@
 # 线上配置文件
 spring:
+  application:
+    name: next-api-backend
+  # 支持 swagger3
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+  # session 配置
+  session:
+    # todo 取消注释开启分布式 session（须先配置 Redis）
+    # store-type: redis
+    # 30 天过期
+    timeout: 2592000
   # 数据库配置
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://119.3.252.5:3306/next_bi_db
-    username: next_bi_db
-    password: kKWd5TP8M8sZbDMC
+    url: jdbc:mysql://localhost:3306/next_api_db
+    username: next_api_db
+    password: EdpKC7JLH4XMKMEp
   # Redis 配置
   redis:
     database: 1

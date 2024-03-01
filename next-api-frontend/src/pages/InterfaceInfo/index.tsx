@@ -117,7 +117,13 @@ const Index: React.FC = () => {
         return acc;
       }, {});
       setExampleRequestParams(JSON.stringify(transformedData ?? '{}', null, 2));
-      finalResult.data = transformedData;
+
+      const responseData: API.InterfaceResponse[] = res.data?.responseParams ?? [];
+      const finalResult: { [key: string]: string } = responseData.reduce((acc, param) => {
+        acc[param.responseName] = param.exampleValue;
+        return acc;
+      }, {});
+
       setExampleResponse(JSON.stringify(finalResult, null, 2));
     } catch (e: any) {
       message.error('请求失败，' + e.message);

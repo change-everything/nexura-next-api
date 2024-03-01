@@ -6,6 +6,7 @@ import cn.hutool.crypto.digest.Digester;
 import cn.hutool.http.HttpRequest;
 import cn.hutool.http.HttpUtil;
 import cn.hutool.json.JSONUtil;
+import cn.nexura.common.model.entity.ExecuteCodeRequest;
 import cn.nexura.common.model.entity.User;
 import cn.nexura.sdk.util.SignUtils;
 import lombok.AllArgsConstructor;
@@ -26,10 +27,19 @@ public class NextApiClient {
 
     private String secretKey;
 
-    public static final String GATEWAY_URL = "http://openapi.nexuracloud.cn/api";
+    public static final String GATEWAY_URL = "https://openapi.nexuracloud.cn";
 
-    public void doQuestionSubmit(String userRequestParams) {
-        System.out.println("判题接口");
+    public String codeJudge(String judgeRequestParams) {
+        ExecuteCodeRequest executeCodeRequest = JSONUtil.toBean(judgeRequestParams, ExecuteCodeRequest.class);
+        String json = JSONUtil.toJsonStr(executeCodeRequest);
+        System.out.println("json = " + json);
+        String result = HttpRequest.post(GATEWAY_URL + "/nextoj/question/codeJudge/")
+                .body(json)
+                .addHeaders(getHeaderMap(json))
+                .execute()
+                .body();
+        System.out.println("result = " + result);
+        return result;
     }
 
     public void genChartByAiAsync(String userRequestParams) {
